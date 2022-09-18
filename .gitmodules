@@ -1,9 +1,0 @@
-[submodule "lv_examples"]
-	path = lv_examples
-	url = https://gitee.com/lyon1998/lv_examples.git
-[submodule "lv_drivers"]
-	path = lv_drivers
-	url = https://gitee.com/lyon1998/lv_drivers.git
-[submodule "lvgl"]
-	path = lvgl
-	url = https://gitee.com/lyon1998/lvgl.git
