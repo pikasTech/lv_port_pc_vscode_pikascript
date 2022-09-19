@@ -19,7 +19,7 @@ WARNINGS 			:= -Wall -Wextra \
 						-Wshadow -Wundef -Wmaybe-uninitialized -Wmissing-prototypes -Wno-discarded-qualifiers \
 						-Wno-unused-function -Wno-error=strict-prototypes -Wpointer-arith -fno-strict-aliasing -Wno-error=cpp -Wuninitialized \
 						-Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-nonliteral -Wno-cast-qual -Wunreachable-code -Wno-switch-default -Wno-missing-prototypes \
-					  	-Wreturn-type -Wmultichar -Wformat-security -Wno-ignored-qualifiers -Wno-error=pedantic -Wno-sign-compare -Wno-error=missing-prototypes -Wdouble-promotion -Wclobbered -Wdeprecated  \
+					  	-Wreturn-type -Wmultichar -Wformat-security -Wno-ignored-qualifiers -Wno-error=pedantic -Wno-sign-compare -Wno-error=missing-prototypes -Wno-pointer-to-int-cast -Wno-double-promotion -Wno-shadow -Wno-double-promotion -Wclobbered -Wdeprecated  \
 						-Wempty-body -Wshift-negative-value -Wstack-usage=2048 \
             			-Wtype-limits -Wsizeof-pointer-memaccess -Wpointer-arith
 
