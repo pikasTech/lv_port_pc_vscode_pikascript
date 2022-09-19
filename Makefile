@@ -35,18 +35,22 @@ BIN 				:= $(BIN_DIR)/demo
 
 COMPILE				= $(CC) $(CFLAGS) $(INC) $(DEFINES)
 
+
 # Automatically include all source files
 SRCS 				:= $(shell find $(SRC_DIR) -type f -name '*.c' -not -path '*/\.*')
 OBJECTS    			:= $(patsubst $(SRC_DIR)%,$(BUILD_DIR)/%,$(SRCS:.$(SRC_EXT)=.$(OBJ_EXT)))
 
-all: default
+all: pre-build
+	@$(MAKE) --no-print-directory default
 $(BUILD_DIR)/%.$(OBJ_EXT): $(SRC_DIR)/%.$(SRC_EXT)
 	@echo 'Building project file: $<'
 	@mkdir -p $(dir $@)
 	@$(COMPILE) -c -o "$@" "$<"
+	
+pre-build:
+	@cd pikascript && ./rust-msc-latest-linux && cd ..
 
 default: $(OBJECTS)
-	cd pikascript && ./rust-msc-latest-linux && cd ..
 	@mkdir -p $(BIN_DIR)
 	$(CC) -o $(BIN) $(OBJECTS) $(LDFLAGS) ${LDLIBS}
 
