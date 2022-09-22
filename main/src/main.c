@@ -19,6 +19,7 @@
 #include "lv_drivers/indev/keyboard.h"
 #include "lv_drivers/indev/mousewheel.h"
 #include "pikaScript.h"
+#include "PikaVM.h"
 
 /*********************
  *      DEFINES
@@ -78,7 +79,8 @@ int main(int argc, char **argv)
   hal_init();
 
 
-  pikaScriptInit();
+  PikaObj* root = pikaScriptInit();
+  pikaVM_runFile(root, "test.py");
 //  lv_example_switch_1();
 //  lv_example_calendar_1();
 //  lv_example_btnmatrix_2();
