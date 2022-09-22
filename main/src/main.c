@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 
 
   PikaObj* root = pikaScriptInit();
-  pikaVM_runFile(root, "test.py");
+  // pikaVM_runFile(root, "test.py");
 //  lv_example_switch_1();
 //  lv_example_calendar_1();
 //  lv_example_btnmatrix_2();
