@@ -30,7 +30,7 @@ void pika_lvgl_lv_obj_align(PikaObj* self, int align, int x_ofs, int y_ofs) {
     lv_obj_align(lv_obj, align, x_ofs, y_ofs);
 }
 
-void pika_lvgl_lv_obj_set_hight(PikaObj* self, int h) {
+void pika_lvgl_lv_obj_set_height(PikaObj* self, int h) {
     lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
     lv_obj_set_height(lv_obj, h);
 }

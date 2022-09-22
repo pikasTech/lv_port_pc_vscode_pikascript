@@ -2018,9 +2018,9 @@ void pika_lvgl_lv_obj_get_yMethod(PikaObj *self, Args *args){
     method_returnInt(args, res);
 }
 
-void pika_lvgl_lv_obj_set_hightMethod(PikaObj *self, Args *args){
+void pika_lvgl_lv_obj_set_heightMethod(PikaObj *self, Args *args){
     int h = args_getInt(args, "h");
-    pika_lvgl_lv_obj_set_hight(self, h);
+    pika_lvgl_lv_obj_set_height(self, h);
 }
 
 void pika_lvgl_lv_obj_set_posMethod(PikaObj *self, Args *args){
@@ -2053,7 +2053,7 @@ PikaObj *New_pika_lvgl_lv_obj(Args *args){
     class_defineMethod(self, "center()", pika_lvgl_lv_obj_centerMethod);
     class_defineMethod(self, "get_x()", pika_lvgl_lv_obj_get_xMethod);
     class_defineMethod(self, "get_y()", pika_lvgl_lv_obj_get_yMethod);
-    class_defineMethod(self, "set_hight(h)", pika_lvgl_lv_obj_set_hightMethod);
+    class_defineMethod(self, "set_height(h)", pika_lvgl_lv_obj_set_heightMethod);
     class_defineMethod(self, "set_pos(x,y)", pika_lvgl_lv_obj_set_posMethod);
     class_defineMethod(self, "set_size(size_x,size_y)", pika_lvgl_lv_obj_set_sizeMethod);
     class_defineMethod(self, "set_width(w)", pika_lvgl_lv_obj_set_widthMethod);
