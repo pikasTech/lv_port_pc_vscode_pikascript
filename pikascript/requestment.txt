@@ -1,3 +1,2 @@
-pikascript-core==v1.11.0
-PikaStdLib==v1.11.0
-pika_lvgl==v0.2.1
+pikascript-core==latest
+PikaStdLib==latest

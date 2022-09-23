@@ -17,8 +17,7 @@ PikaObj *__pikaMain;
 PikaObj *pikaScriptInit(void){
     __platform_printf("======[pikascript packages installed]======\r\n");
     pks_printVersion();
-    __platform_printf("PikaStdLib==v1.11.0\r\n");
-    __platform_printf("pika_lvgl==v0.2.1\r\n");
+    __platform_printf("PikaStdLib==latest\r\n");
     __platform_printf("===========================================\r\n");
     __pikaMain = newRootObj("pikaMain", New_PikaMain);
     extern unsigned char pikaModules_py_a[];
