@@ -425,4 +425,51 @@ void pika_lvgl_style_t_set_y(PikaObj* self, int value) {
     lv_style_set_y(lv_style, value);
 }
 
+int pika_lvgl_style_t_get_num_custom_props(PikaObj* self) {
+    return lv_style_get_num_custom_props();
+}
+
+int pika_lvgl_style_t_prop_has_flag(PikaObj* self, int prop, int flag) {
+    return lv_style_prop_has_flag(prop, flag);
+}
+int pika_lvgl_style_t_is_empty(PikaObj* self) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    return lv_style_is_empty(lv_style);
+}
+int pika_lvgl_style_t_register_prop(PikaObj* self, int flag) {
+    return lv_style_register_prop(flag);
+}
+int pika_lvgl_style_t_remove_prop(PikaObj* self, int prop) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    return lv_style_remove_prop(lv_style, prop);
+}
+void pika_lvgl_style_t_reset(PikaObj* self) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_reset(lv_style);
+}
+void pika_lvgl_style_t_set_pad_all(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_pad_all(lv_style, value);
+}
+void pika_lvgl_style_t_set_pad_gap(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_pad_gap(lv_style, value);
+}
+void pika_lvgl_style_t_set_pad_hor(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_pad_hor(lv_style, value);
+}
+void pika_lvgl_style_t_set_pad_ver(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_pad_ver(lv_style, value);
+}
+void pika_lvgl_style_t_set_prop_meta(PikaObj* self, int prop, int meta) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_prop_meta(lv_style, prop, meta);
+}
+void pika_lvgl_style_t_set_size(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_size(lv_style, value);
+}
+
 #endif
