@@ -102,6 +102,7 @@ void pika_lvgl_lv_obj_add_event_cb(PikaObj* self,
 void pika_lvgl_lv_obj_add_style(PikaObj* self, PikaObj* style, int selector) {
     lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
     lv_style_t* lv_style = obj_getPtr(style, "lv_style");
+    obj_refcntInc(style);
     lv_obj_add_style(lv_obj, lv_style, selector);
 }
 

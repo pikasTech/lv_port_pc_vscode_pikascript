@@ -26,7 +26,7 @@ WARNINGS 			:= -Wall -Wextra \
 CFLAGS 				:= -O0 -g $(WARNINGS)
 
 # Add simulator define to allow modification of source
-DEFINES				:= -D SIMULATOR=1 -D LV_BUILD_TEST=0 -D LV_LVGL_H_INCLUDE_SIMPLE=1 -D PIKASCRIPT=1
+DEFINES				:= -D SIMULATOR=1 -D LV_BUILD_TEST=0 -D LV_LVGL_H_INCLUDE_SIMPLE=1 -D PIKASCRIPT=1 -D PIKA_ASSERT_ENABLE=1
 
 # Include simulator inc folder first so lv_conf.h from custom UI can be used instead
 INC 				:= -I./ui/simulator/inc/ -I./ -I./lvgl/ -I./pikascript/pikascript-core -I./pikascript/pikascript-api -I./pikascript/pikascript-lib
