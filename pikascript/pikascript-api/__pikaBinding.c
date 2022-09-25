@@ -2036,12 +2036,60 @@ void pika_lvgl_lv_obj_alignMethod(PikaObj *self, Args *args){
     pika_lvgl_lv_obj_align(self, align, x_ofs, y_ofs);
 }
 
+void pika_lvgl_lv_obj_align_toMethod(PikaObj *self, Args *args){
+    PikaObj* base = args_getPtr(args, "base");
+    int align = args_getInt(args, "align");
+    int x_ofs = args_getInt(args, "x_ofs");
+    int y_ofs = args_getInt(args, "y_ofs");
+    pika_lvgl_lv_obj_align_to(self, base, align, x_ofs, y_ofs);
+}
+
 void pika_lvgl_lv_obj_centerMethod(PikaObj *self, Args *args){
     pika_lvgl_lv_obj_center(self);
 }
 
+void pika_lvgl_lv_obj_get_content_heightMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_content_height(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_content_widthMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_content_width(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_heightMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_height(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_self_heightMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_self_height(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_self_widthMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_self_width(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_widthMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_width(self);
+    method_returnInt(args, res);
+}
+
 void pika_lvgl_lv_obj_get_xMethod(PikaObj *self, Args *args){
     int res = pika_lvgl_lv_obj_get_x(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_x2Method(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_x2(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_x_alignedMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_x_aligned(self);
     method_returnInt(args, res);
 }
 
@@ -2050,9 +2098,95 @@ void pika_lvgl_lv_obj_get_yMethod(PikaObj *self, Args *args){
     method_returnInt(args, res);
 }
 
+void pika_lvgl_lv_obj_get_y2Method(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_y2(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_get_y_alignedMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_get_y_aligned(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_hit_testMethod(PikaObj *self, Args *args){
+    PikaObj* point = args_getPtr(args, "point");
+    int res = pika_lvgl_lv_obj_hit_test(self, point);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_invalidateMethod(PikaObj *self, Args *args){
+    pika_lvgl_lv_obj_invalidate(self);
+}
+
+void pika_lvgl_lv_obj_is_layout_positionedMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_is_layout_positioned(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_is_visibleMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_is_visible(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_mark_layout_as_dirtyMethod(PikaObj *self, Args *args){
+    pika_lvgl_lv_obj_mark_layout_as_dirty(self);
+}
+
+void pika_lvgl_lv_obj_move_children_byMethod(PikaObj *self, Args *args){
+    int x_diff = args_getInt(args, "x_diff");
+    int y_diff = args_getInt(args, "y_diff");
+    int ignore_floating = args_getInt(args, "ignore_floating");
+    pika_lvgl_lv_obj_move_children_by(self, x_diff, y_diff, ignore_floating);
+}
+
+void pika_lvgl_lv_obj_move_toMethod(PikaObj *self, Args *args){
+    int x = args_getInt(args, "x");
+    int y = args_getInt(args, "y");
+    pika_lvgl_lv_obj_move_to(self, x, y);
+}
+
+void pika_lvgl_lv_obj_refr_posMethod(PikaObj *self, Args *args){
+    pika_lvgl_lv_obj_refr_pos(self);
+}
+
+void pika_lvgl_lv_obj_refr_sizeMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_refr_size(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_refresh_self_sizeMethod(PikaObj *self, Args *args){
+    int res = pika_lvgl_lv_obj_refresh_self_size(self);
+    method_returnInt(args, res);
+}
+
+void pika_lvgl_lv_obj_set_alignMethod(PikaObj *self, Args *args){
+    int align = args_getInt(args, "align");
+    pika_lvgl_lv_obj_set_align(self, align);
+}
+
+void pika_lvgl_lv_obj_set_content_heightMethod(PikaObj *self, Args *args){
+    int h = args_getInt(args, "h");
+    pika_lvgl_lv_obj_set_content_height(self, h);
+}
+
+void pika_lvgl_lv_obj_set_content_widthMethod(PikaObj *self, Args *args){
+    int w = args_getInt(args, "w");
+    pika_lvgl_lv_obj_set_content_width(self, w);
+}
+
+void pika_lvgl_lv_obj_set_ext_click_areaMethod(PikaObj *self, Args *args){
+    int size = args_getInt(args, "size");
+    pika_lvgl_lv_obj_set_ext_click_area(self, size);
+}
+
 void pika_lvgl_lv_obj_set_heightMethod(PikaObj *self, Args *args){
     int h = args_getInt(args, "h");
     pika_lvgl_lv_obj_set_height(self, h);
+}
+
+void pika_lvgl_lv_obj_set_layoutMethod(PikaObj *self, Args *args){
+    int layout = args_getInt(args, "layout");
+    pika_lvgl_lv_obj_set_layout(self, layout);
 }
 
 void pika_lvgl_lv_obj_set_posMethod(PikaObj *self, Args *args){
@@ -2062,14 +2196,31 @@ void pika_lvgl_lv_obj_set_posMethod(PikaObj *self, Args *args){
 }
 
 void pika_lvgl_lv_obj_set_sizeMethod(PikaObj *self, Args *args){
-    int size_x = args_getInt(args, "size_x");
-    int size_y = args_getInt(args, "size_y");
-    pika_lvgl_lv_obj_set_size(self, size_x, size_y);
+    int w = args_getInt(args, "w");
+    int h = args_getInt(args, "h");
+    pika_lvgl_lv_obj_set_size(self, w, h);
 }
 
 void pika_lvgl_lv_obj_set_widthMethod(PikaObj *self, Args *args){
     int w = args_getInt(args, "w");
     pika_lvgl_lv_obj_set_width(self, w);
+}
+
+void pika_lvgl_lv_obj_set_xMethod(PikaObj *self, Args *args){
+    int x = args_getInt(args, "x");
+    pika_lvgl_lv_obj_set_x(self, x);
+}
+
+void pika_lvgl_lv_obj_set_yMethod(PikaObj *self, Args *args){
+    int y = args_getInt(args, "y");
+    pika_lvgl_lv_obj_set_y(self, y);
+}
+
+void pika_lvgl_lv_obj_transform_pointMethod(PikaObj *self, Args *args){
+    PikaObj* p = args_getPtr(args, "p");
+    int recursive = args_getInt(args, "recursive");
+    int inv = args_getInt(args, "inv");
+    pika_lvgl_lv_obj_transform_point(self, p, recursive, inv);
 }
 
 void pika_lvgl_lv_obj_update_layoutMethod(PikaObj *self, Args *args){
@@ -2083,13 +2234,42 @@ PikaObj *New_pika_lvgl_lv_obj(Args *args){
     class_defineMethod(self, "add_state(state)", pika_lvgl_lv_obj_add_stateMethod);
     class_defineMethod(self, "add_style(style,selector)", pika_lvgl_lv_obj_add_styleMethod);
     class_defineMethod(self, "align(align,x_ofs,y_ofs)", pika_lvgl_lv_obj_alignMethod);
+    class_defineMethod(self, "align_to(base,align,x_ofs,y_ofs)", pika_lvgl_lv_obj_align_toMethod);
     class_defineMethod(self, "center()", pika_lvgl_lv_obj_centerMethod);
+    class_defineMethod(self, "get_content_height()", pika_lvgl_lv_obj_get_content_heightMethod);
+    class_defineMethod(self, "get_content_width()", pika_lvgl_lv_obj_get_content_widthMethod);
+    class_defineMethod(self, "get_height()", pika_lvgl_lv_obj_get_heightMethod);
+    class_defineMethod(self, "get_self_height()", pika_lvgl_lv_obj_get_self_heightMethod);
+    class_defineMethod(self, "get_self_width()", pika_lvgl_lv_obj_get_self_widthMethod);
+    class_defineMethod(self, "get_width()", pika_lvgl_lv_obj_get_widthMethod);
     class_defineMethod(self, "get_x()", pika_lvgl_lv_obj_get_xMethod);
+    class_defineMethod(self, "get_x2()", pika_lvgl_lv_obj_get_x2Method);
+    class_defineMethod(self, "get_x_aligned()", pika_lvgl_lv_obj_get_x_alignedMethod);
     class_defineMethod(self, "get_y()", pika_lvgl_lv_obj_get_yMethod);
+    class_defineMethod(self, "get_y2()", pika_lvgl_lv_obj_get_y2Method);
+    class_defineMethod(self, "get_y_aligned()", pika_lvgl_lv_obj_get_y_alignedMethod);
+    class_defineMethod(self, "hit_test(point)", pika_lvgl_lv_obj_hit_testMethod);
+    class_defineMethod(self, "invalidate()", pika_lvgl_lv_obj_invalidateMethod);
+    class_defineMethod(self, "is_layout_positioned()", pika_lvgl_lv_obj_is_layout_positionedMethod);
+    class_defineMethod(self, "is_visible()", pika_lvgl_lv_obj_is_visibleMethod);
+    class_defineMethod(self, "mark_layout_as_dirty()", pika_lvgl_lv_obj_mark_layout_as_dirtyMethod);
+    class_defineMethod(self, "move_children_by(x_diff,y_diff,ignore_floating)", pika_lvgl_lv_obj_move_children_byMethod);
+    class_defineMethod(self, "move_to(x,y)", pika_lvgl_lv_obj_move_toMethod);
+    class_defineMethod(self, "refr_pos()", pika_lvgl_lv_obj_refr_posMethod);
+    class_defineMethod(self, "refr_size()", pika_lvgl_lv_obj_refr_sizeMethod);
+    class_defineMethod(self, "refresh_self_size()", pika_lvgl_lv_obj_refresh_self_sizeMethod);
+    class_defineMethod(self, "set_align(align)", pika_lvgl_lv_obj_set_alignMethod);
+    class_defineMethod(self, "set_content_height(h)", pika_lvgl_lv_obj_set_content_heightMethod);
+    class_defineMethod(self, "set_content_width(w)", pika_lvgl_lv_obj_set_content_widthMethod);
+    class_defineMethod(self, "set_ext_click_area(size)", pika_lvgl_lv_obj_set_ext_click_areaMethod);
     class_defineMethod(self, "set_height(h)", pika_lvgl_lv_obj_set_heightMethod);
+    class_defineMethod(self, "set_layout(layout)", pika_lvgl_lv_obj_set_layoutMethod);
     class_defineMethod(self, "set_pos(x,y)", pika_lvgl_lv_obj_set_posMethod);
-    class_defineMethod(self, "set_size(size_x,size_y)", pika_lvgl_lv_obj_set_sizeMethod);
+    class_defineMethod(self, "set_size(w,h)", pika_lvgl_lv_obj_set_sizeMethod);
     class_defineMethod(self, "set_width(w)", pika_lvgl_lv_obj_set_widthMethod);
+    class_defineMethod(self, "set_x(x)", pika_lvgl_lv_obj_set_xMethod);
+    class_defineMethod(self, "set_y(y)", pika_lvgl_lv_obj_set_yMethod);
+    class_defineMethod(self, "transform_point(p,recursive,inv)", pika_lvgl_lv_obj_transform_pointMethod);
     class_defineMethod(self, "update_layout()", pika_lvgl_lv_obj_update_layoutMethod);
     return self;
 }
