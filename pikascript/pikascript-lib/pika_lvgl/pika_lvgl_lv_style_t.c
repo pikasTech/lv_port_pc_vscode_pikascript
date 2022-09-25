@@ -13,38 +13,6 @@ void pika_lvgl_style_t_init(PikaObj* self) {
     lv_style_init(lv_style);
 }
 
-void pika_lvgl_style_t_set_bg_color(PikaObj* self, PikaObj* color) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_color_t* lv_color = obj_getPtr(color, "lv_color");
-    lv_style_set_bg_color(lv_style, *lv_color);
-}
-
-void pika_lvgl_style_t_set_bg_opa(PikaObj* self, int opa) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_bg_opa(lv_style, opa);
-}
-
-void pika_lvgl_style_t_set_outline_color(PikaObj* self, PikaObj* color) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_color_t* lv_color = obj_getPtr(color, "lv_color");
-    lv_style_set_outline_color(lv_style, *lv_color);
-}
-
-void pika_lvgl_style_t_set_outline_pad(PikaObj* self, int pad) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_outline_pad(lv_style, pad);
-}
-
-void pika_lvgl_style_t_set_outline_width(PikaObj* self, int w) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_outline_width(lv_style, w);
-}
-
-void pika_lvgl_style_t_set_radius(PikaObj* self, int radius) {
-    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_radius(lv_style, radius);
-}
-
 void pika_lvgl_style_t___init__(PikaObj* self) {
     lv_style_t lv_style_stack = {0};
     args_setStruct(self->list, "lv_style_struct", lv_style_stack);
@@ -52,19 +20,274 @@ void pika_lvgl_style_t___init__(PikaObj* self) {
     obj_setPtr(self, "lv_style", lv_style);
 }
 
-void pika_lvgl_style_t_set_shadow_color(PikaObj *self, PikaObj* color){
+void pika_lvgl_style_t_set_align(PikaObj* self, int value) {
     lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_color_t* lv_color = obj_getPtr(color, "lv_color");
-    lv_style_set_shadow_color(lv_style, *lv_color);
+    lv_style_set_align(lv_style, value);
 }
 
-void pika_lvgl_style_t_set_shadow_spread(PikaObj *self, int s){
+void pika_lvgl_style_t_set_anim_speed(PikaObj* self, int value) {
     lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_shadow_spread(lv_style, s);
+    lv_style_set_anim_speed(lv_style, value);
 }
 
-void pika_lvgl_style_t_set_shadow_width(PikaObj *self, int w){
+void pika_lvgl_style_t_set_anim_time(PikaObj* self, int value) {
     lv_style_t* lv_style = obj_getPtr(self, "lv_style");
-    lv_style_set_shadow_width(lv_style, w);
+    lv_style_set_anim_time(lv_style, value);
 }
+
+void pika_lvgl_style_t_set_arc_color(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_arc_color(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_arc_img_src(PikaObj* self, uint8_t* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_arc_img_src(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_arc_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_arc_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_arc_rounded(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_arc_rounded(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_arc_width(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_arc_width(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_base_dir(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_base_dir(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_color(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_bg_color(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_bg_dither_mode(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_dither_mode(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_grad_color(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_bg_grad_color(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_bg_grad_dir(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_grad_dir(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_grad_stop(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_grad_stop(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_img_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_recolor(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_bg_img_recolor(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_bg_img_recolor_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_img_recolor_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_src(PikaObj* self, uint8_t* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_img_src(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_tiled(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_img_tiled(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_main_stop(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_main_stop(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_bg_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_bg_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_blend_mode(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_blend_mode(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_border_color(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_border_color(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_border_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_border_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_border_post(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_border_post(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_border_side(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_border_side(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_border_width(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_border_width(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_clip_corner(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_clip_corner(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_color_filter_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_color_filter_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_height(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_height(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_img_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_img_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_img_recolor(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_img_recolor(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_img_recolor_opa(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_img_recolor_opa(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_layout(PikaObj* self, int value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_style_set_layout(lv_style, value);
+}
+
+void pika_lvgl_style_t_set_line_color(PikaObj* self, PikaObj* value) {
+    lv_style_t* lv_style = obj_getPtr(self, "lv_style");
+    lv_color_t* lv_color = obj_getPtr(value, "lv_color");
+    lv_style_set_line_color(lv_style, *lv_color);
+}
+
+void pika_lvgl_style_t_set_line_dash_gap(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_line_dash_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_line_opa(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_line_rounded(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_line_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_max_height(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_max_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_min_height(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_min_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_opa(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_outline_color(PikaObj* self, PikaObj* value) {}
+
+void pika_lvgl_style_t_set_outline_opa(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_outline_pad(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_outline_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_bottom(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_column(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_left(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_right(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_row(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_pad_top(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_radius(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_shadow_color(PikaObj* self, PikaObj* value) {}
+
+void pika_lvgl_style_t_set_shadow_ofs_x(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_shadow_ofs_y(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_shadow_opa(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_shadow_spread(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_shadow_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_text_align(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_text_color(PikaObj* self, PikaObj* value) {}
+
+void pika_lvgl_style_t_set_text_decor(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_text_letter_space(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_text_line_space(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_text_opa(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_angle(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_height(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_pivot_x(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_pivot_y(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_transform_zoom(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_translate_x(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_translate_y(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_width(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_x(PikaObj* self, int value) {}
+
+void pika_lvgl_style_t_set_y(PikaObj* self, int value) {}
+
 #endif

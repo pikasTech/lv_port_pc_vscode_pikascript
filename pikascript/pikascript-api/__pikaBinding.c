@@ -2199,64 +2199,484 @@ void pika_lvgl_style_t_initMethod(PikaObj *self, Args *args){
     pika_lvgl_style_t_init(self);
 }
 
+void pika_lvgl_style_t_set_alignMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_align(self, value);
+}
+
+void pika_lvgl_style_t_set_anim_speedMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_anim_speed(self, value);
+}
+
+void pika_lvgl_style_t_set_anim_timeMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_anim_time(self, value);
+}
+
+void pika_lvgl_style_t_set_arc_colorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_arc_color(self, value);
+}
+
+void pika_lvgl_style_t_set_arc_img_srcMethod(PikaObj *self, Args *args){
+    uint8_t* value = args_getBytes(args, "value");
+    pika_lvgl_style_t_set_arc_img_src(self, value);
+}
+
+void pika_lvgl_style_t_set_arc_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_arc_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_arc_roundedMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_arc_rounded(self, value);
+}
+
+void pika_lvgl_style_t_set_arc_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_arc_width(self, value);
+}
+
+void pika_lvgl_style_t_set_base_dirMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_base_dir(self, value);
+}
+
 void pika_lvgl_style_t_set_bg_colorMethod(PikaObj *self, Args *args){
-    PikaObj* color = args_getPtr(args, "color");
-    pika_lvgl_style_t_set_bg_color(self, color);
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_bg_color(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_dither_modeMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_dither_mode(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_grad_colorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_bg_grad_color(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_grad_dirMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_grad_dir(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_grad_stopMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_grad_stop(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_img_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_recolorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_bg_img_recolor(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_recolor_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_img_recolor_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_srcMethod(PikaObj *self, Args *args){
+    uint8_t* value = args_getBytes(args, "value");
+    pika_lvgl_style_t_set_bg_img_src(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_img_tiledMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_img_tiled(self, value);
+}
+
+void pika_lvgl_style_t_set_bg_main_stopMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_main_stop(self, value);
 }
 
 void pika_lvgl_style_t_set_bg_opaMethod(PikaObj *self, Args *args){
-    int opa = args_getInt(args, "opa");
-    pika_lvgl_style_t_set_bg_opa(self, opa);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_bg_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_blend_modeMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_blend_mode(self, value);
+}
+
+void pika_lvgl_style_t_set_border_colorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_border_color(self, value);
+}
+
+void pika_lvgl_style_t_set_border_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_border_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_border_postMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_border_post(self, value);
+}
+
+void pika_lvgl_style_t_set_border_sideMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_border_side(self, value);
+}
+
+void pika_lvgl_style_t_set_border_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_border_width(self, value);
+}
+
+void pika_lvgl_style_t_set_clip_cornerMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_clip_corner(self, value);
+}
+
+void pika_lvgl_style_t_set_color_filter_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_color_filter_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_heightMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_height(self, value);
+}
+
+void pika_lvgl_style_t_set_img_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_img_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_img_recolorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_img_recolor(self, value);
+}
+
+void pika_lvgl_style_t_set_img_recolor_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_img_recolor_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_layoutMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_layout(self, value);
+}
+
+void pika_lvgl_style_t_set_line_colorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_line_color(self, value);
+}
+
+void pika_lvgl_style_t_set_line_dash_gapMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_line_dash_gap(self, value);
+}
+
+void pika_lvgl_style_t_set_line_dash_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_line_dash_width(self, value);
+}
+
+void pika_lvgl_style_t_set_line_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_line_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_line_roundedMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_line_rounded(self, value);
+}
+
+void pika_lvgl_style_t_set_line_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_line_width(self, value);
+}
+
+void pika_lvgl_style_t_set_max_heightMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_max_height(self, value);
+}
+
+void pika_lvgl_style_t_set_max_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_max_width(self, value);
+}
+
+void pika_lvgl_style_t_set_min_heightMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_min_height(self, value);
+}
+
+void pika_lvgl_style_t_set_min_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_min_width(self, value);
+}
+
+void pika_lvgl_style_t_set_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_opa(self, value);
 }
 
 void pika_lvgl_style_t_set_outline_colorMethod(PikaObj *self, Args *args){
-    PikaObj* color = args_getPtr(args, "color");
-    pika_lvgl_style_t_set_outline_color(self, color);
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_outline_color(self, value);
+}
+
+void pika_lvgl_style_t_set_outline_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_outline_opa(self, value);
 }
 
 void pika_lvgl_style_t_set_outline_padMethod(PikaObj *self, Args *args){
-    int pad = args_getInt(args, "pad");
-    pika_lvgl_style_t_set_outline_pad(self, pad);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_outline_pad(self, value);
 }
 
 void pika_lvgl_style_t_set_outline_widthMethod(PikaObj *self, Args *args){
-    int w = args_getInt(args, "w");
-    pika_lvgl_style_t_set_outline_width(self, w);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_outline_width(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_bottomMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_bottom(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_columnMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_column(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_leftMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_left(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_rightMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_right(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_rowMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_row(self, value);
+}
+
+void pika_lvgl_style_t_set_pad_topMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_pad_top(self, value);
 }
 
 void pika_lvgl_style_t_set_radiusMethod(PikaObj *self, Args *args){
-    int radius = args_getInt(args, "radius");
-    pika_lvgl_style_t_set_radius(self, radius);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_radius(self, value);
 }
 
 void pika_lvgl_style_t_set_shadow_colorMethod(PikaObj *self, Args *args){
-    PikaObj* color = args_getPtr(args, "color");
-    pika_lvgl_style_t_set_shadow_color(self, color);
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_shadow_color(self, value);
+}
+
+void pika_lvgl_style_t_set_shadow_ofs_xMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_shadow_ofs_x(self, value);
+}
+
+void pika_lvgl_style_t_set_shadow_ofs_yMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_shadow_ofs_y(self, value);
+}
+
+void pika_lvgl_style_t_set_shadow_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_shadow_opa(self, value);
 }
 
 void pika_lvgl_style_t_set_shadow_spreadMethod(PikaObj *self, Args *args){
-    int s = args_getInt(args, "s");
-    pika_lvgl_style_t_set_shadow_spread(self, s);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_shadow_spread(self, value);
 }
 
 void pika_lvgl_style_t_set_shadow_widthMethod(PikaObj *self, Args *args){
-    int w = args_getInt(args, "w");
-    pika_lvgl_style_t_set_shadow_width(self, w);
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_shadow_width(self, value);
+}
+
+void pika_lvgl_style_t_set_text_alignMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_text_align(self, value);
+}
+
+void pika_lvgl_style_t_set_text_colorMethod(PikaObj *self, Args *args){
+    PikaObj* value = args_getPtr(args, "value");
+    pika_lvgl_style_t_set_text_color(self, value);
+}
+
+void pika_lvgl_style_t_set_text_decorMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_text_decor(self, value);
+}
+
+void pika_lvgl_style_t_set_text_letter_spaceMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_text_letter_space(self, value);
+}
+
+void pika_lvgl_style_t_set_text_line_spaceMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_text_line_space(self, value);
+}
+
+void pika_lvgl_style_t_set_text_opaMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_text_opa(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_angleMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_angle(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_heightMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_height(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_pivot_xMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_pivot_x(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_pivot_yMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_pivot_y(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_width(self, value);
+}
+
+void pika_lvgl_style_t_set_transform_zoomMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_transform_zoom(self, value);
+}
+
+void pika_lvgl_style_t_set_translate_xMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_translate_x(self, value);
+}
+
+void pika_lvgl_style_t_set_translate_yMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_translate_y(self, value);
+}
+
+void pika_lvgl_style_t_set_widthMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_width(self, value);
+}
+
+void pika_lvgl_style_t_set_xMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_x(self, value);
+}
+
+void pika_lvgl_style_t_set_yMethod(PikaObj *self, Args *args){
+    int value = args_getInt(args, "value");
+    pika_lvgl_style_t_set_y(self, value);
 }
 
 PikaObj *New_pika_lvgl_style_t(Args *args){
     PikaObj *self = New_TinyObj(args);
     class_defineMethod(self, "__init__()", pika_lvgl_style_t___init__Method);
     class_defineMethod(self, "init()", pika_lvgl_style_t_initMethod);
-    class_defineMethod(self, "set_bg_color(color)", pika_lvgl_style_t_set_bg_colorMethod);
-    class_defineMethod(self, "set_bg_opa(opa)", pika_lvgl_style_t_set_bg_opaMethod);
-    class_defineMethod(self, "set_outline_color(color)", pika_lvgl_style_t_set_outline_colorMethod);
-    class_defineMethod(self, "set_outline_pad(pad)", pika_lvgl_style_t_set_outline_padMethod);
-    class_defineMethod(self, "set_outline_width(w)", pika_lvgl_style_t_set_outline_widthMethod);
-    class_defineMethod(self, "set_radius(radius)", pika_lvgl_style_t_set_radiusMethod);
-    class_defineMethod(self, "set_shadow_color(color)", pika_lvgl_style_t_set_shadow_colorMethod);
-    class_defineMethod(self, "set_shadow_spread(s)", pika_lvgl_style_t_set_shadow_spreadMethod);
-    class_defineMethod(self, "set_shadow_width(w)", pika_lvgl_style_t_set_shadow_widthMethod);
+    class_defineMethod(self, "set_align(value)", pika_lvgl_style_t_set_alignMethod);
+    class_defineMethod(self, "set_anim_speed(value)", pika_lvgl_style_t_set_anim_speedMethod);
+    class_defineMethod(self, "set_anim_time(value)", pika_lvgl_style_t_set_anim_timeMethod);
+    class_defineMethod(self, "set_arc_color(value)", pika_lvgl_style_t_set_arc_colorMethod);
+    class_defineMethod(self, "set_arc_img_src(value)", pika_lvgl_style_t_set_arc_img_srcMethod);
+    class_defineMethod(self, "set_arc_opa(value)", pika_lvgl_style_t_set_arc_opaMethod);
+    class_defineMethod(self, "set_arc_rounded(value)", pika_lvgl_style_t_set_arc_roundedMethod);
+    class_defineMethod(self, "set_arc_width(value)", pika_lvgl_style_t_set_arc_widthMethod);
+    class_defineMethod(self, "set_base_dir(value)", pika_lvgl_style_t_set_base_dirMethod);
+    class_defineMethod(self, "set_bg_color(value)", pika_lvgl_style_t_set_bg_colorMethod);
+    class_defineMethod(self, "set_bg_dither_mode(value)", pika_lvgl_style_t_set_bg_dither_modeMethod);
+    class_defineMethod(self, "set_bg_grad_color(value)", pika_lvgl_style_t_set_bg_grad_colorMethod);
+    class_defineMethod(self, "set_bg_grad_dir(value)", pika_lvgl_style_t_set_bg_grad_dirMethod);
+    class_defineMethod(self, "set_bg_grad_stop(value)", pika_lvgl_style_t_set_bg_grad_stopMethod);
+    class_defineMethod(self, "set_bg_img_opa(value)", pika_lvgl_style_t_set_bg_img_opaMethod);
+    class_defineMethod(self, "set_bg_img_recolor(value)", pika_lvgl_style_t_set_bg_img_recolorMethod);
+    class_defineMethod(self, "set_bg_img_recolor_opa(value)", pika_lvgl_style_t_set_bg_img_recolor_opaMethod);
+    class_defineMethod(self, "set_bg_img_src(value)", pika_lvgl_style_t_set_bg_img_srcMethod);
+    class_defineMethod(self, "set_bg_img_tiled(value)", pika_lvgl_style_t_set_bg_img_tiledMethod);
+    class_defineMethod(self, "set_bg_main_stop(value)", pika_lvgl_style_t_set_bg_main_stopMethod);
+    class_defineMethod(self, "set_bg_opa(value)", pika_lvgl_style_t_set_bg_opaMethod);
+    class_defineMethod(self, "set_blend_mode(value)", pika_lvgl_style_t_set_blend_modeMethod);
+    class_defineMethod(self, "set_border_color(value)", pika_lvgl_style_t_set_border_colorMethod);
+    class_defineMethod(self, "set_border_opa(value)", pika_lvgl_style_t_set_border_opaMethod);
+    class_defineMethod(self, "set_border_post(value)", pika_lvgl_style_t_set_border_postMethod);
+    class_defineMethod(self, "set_border_side(value)", pika_lvgl_style_t_set_border_sideMethod);
+    class_defineMethod(self, "set_border_width(value)", pika_lvgl_style_t_set_border_widthMethod);
+    class_defineMethod(self, "set_clip_corner(value)", pika_lvgl_style_t_set_clip_cornerMethod);
+    class_defineMethod(self, "set_color_filter_opa(value)", pika_lvgl_style_t_set_color_filter_opaMethod);
+    class_defineMethod(self, "set_height(value)", pika_lvgl_style_t_set_heightMethod);
+    class_defineMethod(self, "set_img_opa(value)", pika_lvgl_style_t_set_img_opaMethod);
+    class_defineMethod(self, "set_img_recolor(value)", pika_lvgl_style_t_set_img_recolorMethod);
+    class_defineMethod(self, "set_img_recolor_opa(value)", pika_lvgl_style_t_set_img_recolor_opaMethod);
+    class_defineMethod(self, "set_layout(value)", pika_lvgl_style_t_set_layoutMethod);
+    class_defineMethod(self, "set_line_color(value)", pika_lvgl_style_t_set_line_colorMethod);
+    class_defineMethod(self, "set_line_dash_gap(value)", pika_lvgl_style_t_set_line_dash_gapMethod);
+    class_defineMethod(self, "set_line_dash_width(value)", pika_lvgl_style_t_set_line_dash_widthMethod);
+    class_defineMethod(self, "set_line_opa(value)", pika_lvgl_style_t_set_line_opaMethod);
+    class_defineMethod(self, "set_line_rounded(value)", pika_lvgl_style_t_set_line_roundedMethod);
+    class_defineMethod(self, "set_line_width(value)", pika_lvgl_style_t_set_line_widthMethod);
+    class_defineMethod(self, "set_max_height(value)", pika_lvgl_style_t_set_max_heightMethod);
+    class_defineMethod(self, "set_max_width(value)", pika_lvgl_style_t_set_max_widthMethod);
+    class_defineMethod(self, "set_min_height(value)", pika_lvgl_style_t_set_min_heightMethod);
+    class_defineMethod(self, "set_min_width(value)", pika_lvgl_style_t_set_min_widthMethod);
+    class_defineMethod(self, "set_opa(value)", pika_lvgl_style_t_set_opaMethod);
+    class_defineMethod(self, "set_outline_color(value)", pika_lvgl_style_t_set_outline_colorMethod);
+    class_defineMethod(self, "set_outline_opa(value)", pika_lvgl_style_t_set_outline_opaMethod);
+    class_defineMethod(self, "set_outline_pad(value)", pika_lvgl_style_t_set_outline_padMethod);
+    class_defineMethod(self, "set_outline_width(value)", pika_lvgl_style_t_set_outline_widthMethod);
+    class_defineMethod(self, "set_pad_bottom(value)", pika_lvgl_style_t_set_pad_bottomMethod);
+    class_defineMethod(self, "set_pad_column(value)", pika_lvgl_style_t_set_pad_columnMethod);
+    class_defineMethod(self, "set_pad_left(value)", pika_lvgl_style_t_set_pad_leftMethod);
+    class_defineMethod(self, "set_pad_right(value)", pika_lvgl_style_t_set_pad_rightMethod);
+    class_defineMethod(self, "set_pad_row(value)", pika_lvgl_style_t_set_pad_rowMethod);
+    class_defineMethod(self, "set_pad_top(value)", pika_lvgl_style_t_set_pad_topMethod);
+    class_defineMethod(self, "set_radius(value)", pika_lvgl_style_t_set_radiusMethod);
+    class_defineMethod(self, "set_shadow_color(value)", pika_lvgl_style_t_set_shadow_colorMethod);
+    class_defineMethod(self, "set_shadow_ofs_x(value)", pika_lvgl_style_t_set_shadow_ofs_xMethod);
+    class_defineMethod(self, "set_shadow_ofs_y(value)", pika_lvgl_style_t_set_shadow_ofs_yMethod);
+    class_defineMethod(self, "set_shadow_opa(value)", pika_lvgl_style_t_set_shadow_opaMethod);
+    class_defineMethod(self, "set_shadow_spread(value)", pika_lvgl_style_t_set_shadow_spreadMethod);
+    class_defineMethod(self, "set_shadow_width(value)", pika_lvgl_style_t_set_shadow_widthMethod);
+    class_defineMethod(self, "set_text_align(value)", pika_lvgl_style_t_set_text_alignMethod);
+    class_defineMethod(self, "set_text_color(value)", pika_lvgl_style_t_set_text_colorMethod);
+    class_defineMethod(self, "set_text_decor(value)", pika_lvgl_style_t_set_text_decorMethod);
+    class_defineMethod(self, "set_text_letter_space(value)", pika_lvgl_style_t_set_text_letter_spaceMethod);
+    class_defineMethod(self, "set_text_line_space(value)", pika_lvgl_style_t_set_text_line_spaceMethod);
+    class_defineMethod(self, "set_text_opa(value)", pika_lvgl_style_t_set_text_opaMethod);
+    class_defineMethod(self, "set_transform_angle(value)", pika_lvgl_style_t_set_transform_angleMethod);
+    class_defineMethod(self, "set_transform_height(value)", pika_lvgl_style_t_set_transform_heightMethod);
+    class_defineMethod(self, "set_transform_pivot_x(value)", pika_lvgl_style_t_set_transform_pivot_xMethod);
+    class_defineMethod(self, "set_transform_pivot_y(value)", pika_lvgl_style_t_set_transform_pivot_yMethod);
+    class_defineMethod(self, "set_transform_width(value)", pika_lvgl_style_t_set_transform_widthMethod);
+    class_defineMethod(self, "set_transform_zoom(value)", pika_lvgl_style_t_set_transform_zoomMethod);
+    class_defineMethod(self, "set_translate_x(value)", pika_lvgl_style_t_set_translate_xMethod);
+    class_defineMethod(self, "set_translate_y(value)", pika_lvgl_style_t_set_translate_yMethod);
+    class_defineMethod(self, "set_width(value)", pika_lvgl_style_t_set_widthMethod);
+    class_defineMethod(self, "set_x(value)", pika_lvgl_style_t_set_xMethod);
+    class_defineMethod(self, "set_y(value)", pika_lvgl_style_t_set_yMethod);
     return self;
 }
 

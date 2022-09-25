@@ -46,7 +46,7 @@ PikaObj *pikaScriptInit(void){
             "style.init()\n"
             "style.set_bg_opa(lv.OPA.TRANSP)\n"
             "widget1.add_style(style, 0)\n"
-            "widget1.set_text('0')\n"
+            "widget1.set_text('hello qqq')\n"
             "style = lv.style_t()\n"
             "style.init()\n"
             "widget1.add_style(style, 0)\n"
