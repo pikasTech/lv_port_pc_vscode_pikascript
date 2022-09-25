@@ -1292,6 +1292,12 @@ void pika_lvgl_labelMethod(PikaObj *self, Args *args){
     method_returnArg(args, res);
 }
 
+void pika_lvgl_lv_color_hexMethod(PikaObj *self, Args *args){
+    int64_t hex = args_getInt(args, "hex");
+    PikaObj* res = pika_lvgl_lv_color_hex(self, hex);
+    method_returnObj(args, res);
+}
+
 void pika_lvgl_lv_color_tMethod(PikaObj *self, Args *args){
     Arg* res = pika_lvgl_lv_color_t(self);
     method_returnArg(args, res);
@@ -1393,6 +1399,7 @@ PikaObj *New_pika_lvgl(Args *args){
     class_defineMethod(self, "indev_get_act()", pika_lvgl_indev_get_actMethod);
     class_defineConstructor(self, "indev_t()", pika_lvgl_indev_tMethod);
     class_defineConstructor(self, "label()", pika_lvgl_labelMethod);
+    class_defineMethod(self, "lv_color_hex(hex)", pika_lvgl_lv_color_hexMethod);
     class_defineConstructor(self, "lv_color_t()", pika_lvgl_lv_color_tMethod);
     class_defineConstructor(self, "lv_event()", pika_lvgl_lv_eventMethod);
     class_defineConstructor(self, "lv_obj()", pika_lvgl_lv_objMethod);
@@ -1999,6 +2006,11 @@ Arg *pika_lvgl_lv_event(PikaObj *self){
 #endif
 
 #ifndef PIKA_MODULE_PIKA_LVGL_DISABLE
+void pika_lvgl_lv_obj___init__Method(PikaObj *self, Args *args){
+    PikaObj* parent = args_getPtr(args, "parent");
+    pika_lvgl_lv_obj___init__(self, parent);
+}
+
 void pika_lvgl_lv_obj_add_event_cbMethod(PikaObj *self, Args *args){
     Arg* event_cb = args_getArg(args, "event_cb");
     int filter = args_getInt(args, "filter");
@@ -2066,6 +2078,7 @@ void pika_lvgl_lv_obj_update_layoutMethod(PikaObj *self, Args *args){
 
 PikaObj *New_pika_lvgl_lv_obj(Args *args){
     PikaObj *self = New_TinyObj(args);
+    class_defineMethod(self, "__init__(parent)", pika_lvgl_lv_obj___init__Method);
     class_defineMethod(self, "add_event_cb(event_cb,filter,user_data)", pika_lvgl_lv_obj_add_event_cbMethod);
     class_defineMethod(self, "add_state(state)", pika_lvgl_lv_obj_add_stateMethod);
     class_defineMethod(self, "add_style(style,selector)", pika_lvgl_lv_obj_add_styleMethod);

@@ -32,6 +32,7 @@ Arg* pika_lvgl_dropdown(PikaObj *self);
 PikaObj* pika_lvgl_indev_get_act(PikaObj *self);
 Arg* pika_lvgl_indev_t(PikaObj *self);
 Arg* pika_lvgl_label(PikaObj *self);
+PikaObj* pika_lvgl_lv_color_hex(PikaObj *self, int64_t hex);
 Arg* pika_lvgl_lv_color_t(PikaObj *self);
 Arg* pika_lvgl_lv_event(PikaObj *self);
 Arg* pika_lvgl_lv_obj(PikaObj *self);
