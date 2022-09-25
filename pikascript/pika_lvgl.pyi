@@ -243,6 +243,33 @@ class style_t:
     def set_blend_mode(self, value: int): ...
     def set_layout(self, value: int): ...
     def set_base_dir(self, value: int): ...
+    """
+    void lv_style_reset(lv_style_t* style);
+    lv_style_prop_t lv_style_register_prop(uint8_t flag);
+    lv_style_prop_t lv_style_get_num_custom_props(void);
+    bool lv_style_remove_prop(lv_style_t* style, lv_style_prop_t prop);
+    void lv_style_set_prop(lv_style_t* style,
+                           lv_style_prop_t prop,
+                           lv_style_value_t value);
+    void lv_style_set_prop_meta(lv_style_t* style,
+                                lv_style_prop_t prop,
+                                uint16_t meta);
+    lv_style_res_t lv_style_get_prop(const lv_style_t* style,
+                                     lv_style_prop_t prop,
+                                     lv_style_value_t* value);
+    void lv_style_transition_dsc_init(lv_style_transition_dsc_t* tr,
+                                      const lv_style_prop_t props[],
+                                      lv_anim_path_cb_t path_cb,
+                                      uint32_t time,
+                                      uint32_t delay,
+                                      void* user_data);
+    lv_style_value_t lv_style_prop_get_default(lv_style_prop_t prop);
+    static inline lv_style_res_t lv_style_get_prop_inlined(const lv_style_t* style,
+                                                           lv_style_prop_t prop,
+                                                           lv_style_value_t* value);
+    """
+    
+
 
 
 class lv_obj:
