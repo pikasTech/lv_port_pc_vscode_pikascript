@@ -133,6 +133,11 @@ class STATE:
     ANY: int
     def __init__(self): ...
 
+class TEXT_DECOR:
+    NONE:int
+    UNDERLINE:int
+    STRIKETHROUGH:int
+    def __init__(self): ...
 
 class lv_event:
     def get_code(self) -> int: ...

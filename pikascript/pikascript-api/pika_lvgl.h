@@ -23,6 +23,7 @@ Arg* pika_lvgl_EVENT(PikaObj *self);
 Arg* pika_lvgl_OPA(PikaObj *self);
 Arg* pika_lvgl_PALETTE(PikaObj *self);
 Arg* pika_lvgl_STATE(PikaObj *self);
+Arg* pika_lvgl_TEXT_DECOR(PikaObj *self);
 void pika_lvgl___init__(PikaObj *self);
 Arg* pika_lvgl_arc(PikaObj *self);
 Arg* pika_lvgl_bar(PikaObj *self);

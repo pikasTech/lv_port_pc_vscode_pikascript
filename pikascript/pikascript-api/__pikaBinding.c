@@ -69,6 +69,8 @@
 #include "TinyObj.h"
 #include "pika_lvgl_STATE.h"
 #include "TinyObj.h"
+#include "pika_lvgl_TEXT_DECOR.h"
+#include "TinyObj.h"
 #include "pika_lvgl_arc.h"
 #include "pika_lvgl_lv_obj.h"
 #include "pika_lvgl_bar.h"
@@ -1248,6 +1250,11 @@ void pika_lvgl_STATEMethod(PikaObj *self, Args *args){
     method_returnArg(args, res);
 }
 
+void pika_lvgl_TEXT_DECORMethod(PikaObj *self, Args *args){
+    Arg* res = pika_lvgl_TEXT_DECOR(self);
+    method_returnArg(args, res);
+}
+
 void pika_lvgl___init__Method(PikaObj *self, Args *args){
     pika_lvgl___init__(self);
 }
@@ -1390,6 +1397,7 @@ PikaObj *New_pika_lvgl(Args *args){
     class_defineConstructor(self, "OPA()", pika_lvgl_OPAMethod);
     class_defineConstructor(self, "PALETTE()", pika_lvgl_PALETTEMethod);
     class_defineConstructor(self, "STATE()", pika_lvgl_STATEMethod);
+    class_defineConstructor(self, "TEXT_DECOR()", pika_lvgl_TEXT_DECORMethod);
     class_defineMethod(self, "__init__()", pika_lvgl___init__Method);
     class_defineConstructor(self, "arc()", pika_lvgl_arcMethod);
     class_defineConstructor(self, "bar()", pika_lvgl_barMethod);
@@ -1513,6 +1521,22 @@ PikaObj *New_pika_lvgl_STATE(Args *args){
 
 Arg *pika_lvgl_STATE(PikaObj *self){
     return obj_newObjInPackage(New_pika_lvgl_STATE);
+}
+#endif
+
+#ifndef PIKA_MODULE_PIKA_LVGL_DISABLE
+void pika_lvgl_TEXT_DECOR___init__Method(PikaObj *self, Args *args){
+    pika_lvgl_TEXT_DECOR___init__(self);
+}
+
+PikaObj *New_pika_lvgl_TEXT_DECOR(Args *args){
+    PikaObj *self = New_TinyObj(args);
+    class_defineMethod(self, "__init__()", pika_lvgl_TEXT_DECOR___init__Method);
+    return self;
+}
+
+Arg *pika_lvgl_TEXT_DECOR(PikaObj *self){
+    return obj_newObjInPackage(New_pika_lvgl_TEXT_DECOR);
 }
 #endif
 
