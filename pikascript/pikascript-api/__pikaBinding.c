@@ -18,7 +18,6 @@
 #include "TinyObj.h"
 #include "PikaMain.h"
 #include "PikaStdLib_SysObj.h"
-#include "PikaStdLib.h"
 #include "pika_lvgl.h"
 #include "PikaStdData.h"
 #include "TinyObj.h"
@@ -145,7 +144,6 @@ Arg *PikaDebug_Debuger(PikaObj *self){
 #ifndef PIKA_MODULE_MAIN_DISABLE
 PikaObj *New_PikaMain(Args *args){
     PikaObj *self = New_PikaStdLib_SysObj(args);
-    obj_newObj(self, "PikaStdLib", "PikaStdLib", New_PikaStdLib);
     obj_newObj(self, "pika_lvgl", "pika_lvgl", New_pika_lvgl);
     return self;
 }
@@ -1001,6 +999,13 @@ void PikaStdLib_SysObj_getattrMethod(PikaObj *self, Args *args){
     method_returnArg(args, res);
 }
 
+void PikaStdLib_SysObj_hasattrMethod(PikaObj *self, Args *args){
+    PikaObj* obj = args_getPtr(args, "obj");
+    char* name = args_getStr(args, "name");
+    int res = PikaStdLib_SysObj_hasattr(self, obj, name);
+    method_returnInt(args, res);
+}
+
 void PikaStdLib_SysObj_hexMethod(PikaObj *self, Args *args){
     int val = args_getInt(args, "val");
     char* res = PikaStdLib_SysObj_hex(self, val);
@@ -1112,6 +1117,9 @@ PikaObj *New_PikaStdLib_SysObj(Args *args){
     class_defineMethod(self, "float(arg)", PikaStdLib_SysObj_floatMethod);
 #if !PIKA_NANO_ENABLE
     class_defineMethod(self, "getattr(obj,name)", PikaStdLib_SysObj_getattrMethod);
+#endif
+#if !PIKA_NANO_ENABLE
+    class_defineMethod(self, "hasattr(obj,name)", PikaStdLib_SysObj_hasattrMethod);
 #endif
 #if !PIKA_NANO_ENABLE
     class_defineMethod(self, "hex(val)", PikaStdLib_SysObj_hexMethod);

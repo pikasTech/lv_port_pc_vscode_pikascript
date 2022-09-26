@@ -29,6 +29,7 @@ void PikaStdLib_SysObj_exec(PikaObj *self, char* code);
 void PikaStdLib_SysObj_exit(PikaObj *self);
 double PikaStdLib_SysObj_float(PikaObj *self, Arg* arg);
 Arg* PikaStdLib_SysObj_getattr(PikaObj *self, PikaObj* obj, char* name);
+int PikaStdLib_SysObj_hasattr(PikaObj *self, PikaObj* obj, char* name);
 char* PikaStdLib_SysObj_hex(PikaObj *self, int val);
 int PikaStdLib_SysObj_id(PikaObj *self, Arg* obj);
 int PikaStdLib_SysObj_int(PikaObj *self, Arg* arg);

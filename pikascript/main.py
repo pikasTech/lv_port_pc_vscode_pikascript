@@ -1,32 +1,57 @@
 import pika_lvgl as lv
-import PikaStdLib
-mem = PikaStdLib.MemChecker()
+class DataBinding:
+    _inner_ = []
+
+    def __init__(self, data):
+        _bindings_ = {}
+        self._inner_.append(_bindings_)
+        self._inner_.append(data)
+        # self._inner_[0] = _bindings
+        # self._inner_[1] = data
+
+    def __getattr__(self, name):
+        data = self._inner_[1]
+        return data[name]
+
+    def __setattr__(self, name, value):
+        _bindings_ = self._inner_[0]
+        if name in _bindings_:
+            bindings = _bindings_[name]
+            for binding in bindings:
+                element = binding['element']
+                attr = binding['attr']
+                _name = attr.replace("-", "_")
+                funcName = "set_%s" % _name
+                if hasattr(element, funcName):
+                    func = getattr(element, funcName)
+                    func(value)
+                else:
+                    if hasattr(element, "obj") and element.obj:
+                        setattr(element.obj, _name, value)
+
+    def set_binding_value(self, element, attr, key):
+        _bindings_ = self._inner_[0]
+        if key not in _bindings_:
+            _bindings_[key] = []
+
+        _bindings_[key].append({
+            "element": element,
+            "attr": attr
+        })
 
 
-#
-# Using the text style properties
-#
+_data = {
+    'a': 10,
+    'b': 100
+}
+data = DataBinding(_data)
 
-style = lv.style_t()
-style.init()
 
-style.set_radius(5)
-style.set_bg_opa(lv.OPA.COVER)
-style.set_bg_color(lv.palette_lighten(lv.PALETTE.GREY, 3))
-style.set_border_width(2)
-style.set_border_color(lv.palette_main(lv.PALETTE.BLUE))
-style.set_pad_all(10)
+class Binding:
+    def set_value(self, value):
+        print('set value =', value)
 
-style.set_text_color(lv.palette_main(lv.PALETTE.BLUE))
-style.set_text_letter_space(5)
-style.set_text_line_space(20)
-style.set_text_decor(lv.TEXT_DECOR.UNDERLINE)
 
-# Create an object with the new style
-obj = lv.label(lv.scr_act())
-obj.add_style(style, 0)
-obj.set_text("Text of\n"
-             "a label")
-
-obj.center()
-
+binding = Binding()
+data.set_binding_value(binding, 'value', 'a')
+data.a = 20
