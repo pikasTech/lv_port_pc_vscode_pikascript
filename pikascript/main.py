@@ -1,4 +1,8 @@
 import pika_lvgl as lv
+import PikaStdLib
+mem = PikaStdLib.MemChecker()
+
+
 class DataBinding:
     _inner_ = []
 
@@ -6,8 +10,6 @@ class DataBinding:
         _bindings_ = {}
         self._inner_.append(_bindings_)
         self._inner_.append(data)
-        # self._inner_[0] = _bindings
-        # self._inner_[1] = data
 
     def __getattr__(self, name):
         data = self._inner_[1]
@@ -22,9 +24,10 @@ class DataBinding:
                 attr = binding['attr']
                 _name = attr.replace("-", "_")
                 funcName = "set_%s" % _name
+                print(funcName, hasattr(element, funcName))
                 if hasattr(element, funcName):
                     func = getattr(element, funcName)
-                    func(value)
+                    element.func(value)
                 else:
                     if hasattr(element, "obj") and element.obj:
                         setattr(element.obj, _name, value)
@@ -40,18 +43,29 @@ class DataBinding:
         })
 
 
-_data = {
-    'a': 10,
-    'b': 100
-}
-data = DataBinding(_data)
+data = {"clickcount": 0, "result": "", "count": 0}
+data = DataBinding(data)
 
+widget0 = lv.obj(lv.scr_act())
+style = lv.style_t()
+style.init()
+widget0.set_width(240)
+widget0.set_height(240)
+style.set_bg_color(lv.lv_color_hex(37864))
+widget0.add_style(style, 0)
+widget1 = lv.label(widget0)
+style = lv.style_t()
+style.init()
+widget1.set_x(5)
+widget1.set_y(10)
+widget1.set_width(220)
+widget1.set_height(30)
+style.set_bg_opa(lv.OPA.TRANSP)
+widget1.set_text('0')
+widget1.add_style(style, 0)
+data.set_binding_value(widget1, 'text', 'count')
 
-class Binding:
-    def set_value(self, value):
-        print('set value =', value)
+data.count = 10
 
-
-binding = Binding()
-data.set_binding_value(binding, 'value', 'a')
-data.a = 20
+# user code
+print("write python code here")
