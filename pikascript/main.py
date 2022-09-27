@@ -2,10 +2,8 @@ import pika_lvgl as lv
 import PikaStdLib
 mem = PikaStdLib.MemChecker()
 
-
 class DataBinding:
     _inner_ = []
-
     def __init__(self, data):
         _bindings_ = {}
         self._inner_.append(_bindings_)
@@ -24,7 +22,8 @@ class DataBinding:
                 attr = binding['attr']
                 _name = attr.replace("-", "_")
                 funcName = "set_%s" % _name
-                print(funcName, hasattr(element, funcName))
+                if attr is 'text':
+                    value = str(value)
                 if hasattr(element, funcName):
                     element.func = getattr(element, funcName)
                     element.func(value)
@@ -43,11 +42,7 @@ class DataBinding:
         })
 
 
-data = {
-    "clickcount": 0,
-    "result": "",
-    "count": '0'
-}
+data = {"clickcount":0,"result":"","count":0}
 data = DataBinding(data)
 
 widget0 = lv.obj(lv.scr_act())
@@ -69,7 +64,10 @@ widget1.set_text('0')
 widget1.add_style(style, 0)
 data.set_binding_value(widget1, 'text', 'count')
 
-data.count = '10'
 
 # user code
-print("write python code here")
+def onclick(e):
+    print('fsdf')
+    data.count = data.count + 1
+
+widget1.add_event_cb(onclick, lv.EVENT.ALL, 0)
