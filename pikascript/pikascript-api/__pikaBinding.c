@@ -81,6 +81,8 @@
 #include "pika_lvgl_lv_obj.h"
 #include "pika_lvgl_dropdown.h"
 #include "pika_lvgl_lv_obj.h"
+#include "pika_lvgl_img.h"
+#include "pika_lvgl_lv_obj.h"
 #include "pika_lvgl_indev_t.h"
 #include "TinyObj.h"
 #include "pika_lvgl_label.h"
@@ -1294,6 +1296,11 @@ void pika_lvgl_dropdownMethod(PikaObj *self, Args *args){
     method_returnArg(args, res);
 }
 
+void pika_lvgl_imgMethod(PikaObj *self, Args *args){
+    Arg* res = pika_lvgl_img(self);
+    method_returnArg(args, res);
+}
+
 void pika_lvgl_indev_get_actMethod(PikaObj *self, Args *args){
     PikaObj* res = pika_lvgl_indev_get_act(self);
     method_returnObj(args, res);
@@ -1414,6 +1421,7 @@ PikaObj *New_pika_lvgl(Args *args){
     class_defineConstructor(self, "btn()", pika_lvgl_btnMethod);
     class_defineConstructor(self, "checkbox()", pika_lvgl_checkboxMethod);
     class_defineConstructor(self, "dropdown()", pika_lvgl_dropdownMethod);
+    class_defineConstructor(self, "img()", pika_lvgl_imgMethod);
     class_defineMethod(self, "indev_get_act()", pika_lvgl_indev_get_actMethod);
     class_defineConstructor(self, "indev_t()", pika_lvgl_indev_tMethod);
     class_defineConstructor(self, "label()", pika_lvgl_labelMethod);
@@ -1943,6 +1951,23 @@ PikaObj *New_pika_lvgl_dropdown(Args *args){
 
 Arg *pika_lvgl_dropdown(PikaObj *self){
     return obj_newObjInPackage(New_pika_lvgl_dropdown);
+}
+#endif
+
+#ifndef PIKA_MODULE_PIKA_LVGL_DISABLE
+void pika_lvgl_img___init__Method(PikaObj *self, Args *args){
+    PikaObj* parent = args_getPtr(args, "parent");
+    pika_lvgl_img___init__(self, parent);
+}
+
+PikaObj *New_pika_lvgl_img(Args *args){
+    PikaObj *self = New_pika_lvgl_lv_obj(args);
+    class_defineMethod(self, "__init__(parent)", pika_lvgl_img___init__Method);
+    return self;
+}
+
+Arg *pika_lvgl_img(PikaObj *self){
+    return obj_newObjInPackage(New_pika_lvgl_img);
 }
 #endif
 

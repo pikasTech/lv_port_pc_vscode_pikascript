@@ -30,6 +30,7 @@ Arg* pika_lvgl_bar(PikaObj *self);
 Arg* pika_lvgl_btn(PikaObj *self);
 Arg* pika_lvgl_checkbox(PikaObj *self);
 Arg* pika_lvgl_dropdown(PikaObj *self);
+Arg* pika_lvgl_img(PikaObj *self);
 PikaObj* pika_lvgl_indev_get_act(PikaObj *self);
 Arg* pika_lvgl_indev_t(PikaObj *self);
 Arg* pika_lvgl_label(PikaObj *self);

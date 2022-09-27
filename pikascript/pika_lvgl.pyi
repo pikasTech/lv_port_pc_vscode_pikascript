@@ -432,6 +432,28 @@ class table(lv_obj):
     def __init__(self, parent: lv_obj): ...
     def set_cell_value(self, row: int, col: int, txt: str): ...
 
+class img(lv_obj):
+    def __init__(self, parent: lv_obj): ...
+    """
+    void lv_img_set_src(lv_obj_t * obj, const void * src);
+    void lv_img_set_offset_x(lv_obj_t * obj, lv_coord_t x);
+    void lv_img_set_offset_y(lv_obj_t * obj, lv_coord_t y);
+    void lv_img_set_angle(lv_obj_t * obj, int16_t angle);
+    void lv_img_set_pivot(lv_obj_t * obj, lv_coord_t x, lv_coord_t y);
+    void lv_img_set_zoom(lv_obj_t * obj, uint16_t zoom);
+    void lv_img_set_antialias(lv_obj_t * obj, bool antialias);
+    void lv_img_set_size_mode(lv_obj_t * obj, lv_img_size_mode_t mode);
+    const void * lv_img_get_src(lv_obj_t * obj);
+    lv_coord_t lv_img_get_offset_x(lv_obj_t * obj);
+    lv_coord_t lv_img_get_offset_y(lv_obj_t * obj);
+    uint16_t lv_img_get_angle(lv_obj_t * obj);
+    void lv_img_get_pivot(lv_obj_t * obj, lv_point_t * pivot);
+    uint16_t lv_img_get_zoom(lv_obj_t * obj);
+    bool lv_img_get_antialias(lv_obj_t * obj);
+    lv_img_size_mode_t lv_img_get_size_mode(lv_obj_t * obj);
+    """
+
+
 
 class textarea(lv_obj):
     def __init__(self, parent: lv_obj): ...
