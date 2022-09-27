@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
 
-#define USE_FILE_SYSTEM 0
+#define USE_FILE_SYSTEM 1
 
 #if USE_FILE_SYSTEM
     PikaObj* root = newRootObj("pikaMain", New_PikaMain);

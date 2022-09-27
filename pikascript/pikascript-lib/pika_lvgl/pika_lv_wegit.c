@@ -434,11 +434,8 @@ void pika_lvgl_img_set_size_mode(PikaObj* self, int mode) {
 void pika_lvgl_img_dsc_t___init__(PikaObj* self, PikaObj* dsc_dict) {
     obj_setRef(self, "dsc_dict", dsc_dict);
     PikaDict* dsc_dict_ = obj_getPtr(dsc_dict, "dict");
-    lv_img_dsc_t img_dsc = {
-        .data = dict_getBytes(dsc_dict_, "data"),
-        .data_size = dict_getInt(dsc_dict_, "data_size"),
-    };
-    obj_setStruct(self, "img_dsc", img_dsc);
+    extern const lv_img_dsc_t img_cogwheel_argb;
+    obj_setStruct(self, "img_dsc", img_cogwheel_argb);
 }
 
 void pika_lvgl_img_set_src(PikaObj* self, PikaObj* src) {
