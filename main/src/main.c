@@ -78,9 +78,14 @@ int main(int argc, char** argv) {
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
 
-    // PikaObj* root = pikaScriptInit();
+#define USE_FILE_SYSTEM 0
+
+#if USE_FILE_SYSTEM
     PikaObj* root = newRootObj("pikaMain", New_PikaMain);
     pikaVM_runFile(root, "main.py");
+#else
+    PikaObj* root = pikaScriptInit();
+#endif
     //  lv_example_switch_1();
     //  lv_example_calendar_1();
     //  lv_example_btnmatrix_2();

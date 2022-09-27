@@ -48,7 +48,7 @@ $(BUILD_DIR)/%.$(OBJ_EXT): $(SRC_DIR)/%.$(SRC_EXT)
 	@$(COMPILE) -c -o "$@" "$<"
 	
 pre-build:
-	@cd pikascript && wine rust-msc-latest-win10.exe && cd ..
+	@cd pikascript && ./rust-msc-latest-linux && cd ..
 
 default: $(OBJECTS)
 	@mkdir -p $(BIN_DIR)
