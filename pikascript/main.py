@@ -1,19 +1,26 @@
 import pika_lvgl as lv
 import PikaStdLib as std
+import PikaCV as cv
 
-
+img = cv.Image()
+img.read("../evue_designer.jpg")
+cv.Converter.toRGB565(img)
 
 # Create an image from the png file
 try:
-    f = open('../lvgl/examples/assets/img_cogwheel_argb.png','rb')
+    f = open('../lvgl/examples/assets/img_cogwheel_argb.png', 'rb')
     png_data = f.read(-1)
 except:
     print("Could not find img_cogwheel_argb.png")
     exit()
 
 img_cogwheel_argb = lv.img_dsc_t({
-  'data_size': len(png_data),
-  'data': png_data
+    'header': {
+        'h': img.hight(),
+        'w': img.width(),
+    },
+    'data_size': img.size(),
+    'data': img.data()
 })
 
 img1 = lv.img(lv.scr_act())
