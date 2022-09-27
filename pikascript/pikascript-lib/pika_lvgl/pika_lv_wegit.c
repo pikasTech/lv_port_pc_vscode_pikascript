@@ -432,22 +432,21 @@ void pika_lvgl_img_set_size_mode(PikaObj* self, int mode) {
 }
 
 void pika_lvgl_img_dsc_t___init__(PikaObj* self, PikaObj* dsc_dict) {
-    obj_setRef(self, "dsc_dict", dsc_dict);
-    PikaDict* dsc_dict_ = obj_getPtr(dsc_dict, "dict");
-    PikaObj* header = dict_getPtr(dsc_dict_, "header");
-    PikaDict* header_ = obj_getPtr(header, "dict");
-    lv_img_dsc_t img_dsc = {
-        .data = dict_getBytes(dsc_dict_, "data"),
-        .data_size = dict_getInt(dsc_dict_, "data_size"),
-        .header =
-            {
-                .always_zero = 0,
-                .w = dict_getInt(header_, "w"),
-                .h = dict_getInt(header_, "h"),
-                .cf = LV_IMG_CF_RGB565,
-            },
-    };
-    obj_setStruct(self, "img_dsc", img_dsc);
+    // obj_setRef(self, "dsc_dict", dsc_dict);
+    // PikaDict* dsc_dict_ = obj_getPtr(dsc_dict, "dict");
+    // PikaObj* header = dict_getPtr(dsc_dict_, "header");
+    // PikaDict* header_ = obj_getPtr(header, "dict");
+    // lv_img_dsc_t img_dsc = {
+    //     .data = dict_getBytes(dsc_dict_, "data"),
+    //     .data_size = dict_getInt(dsc_dict_, "data_size"),
+    //     .header =
+    //         {
+    //             .always_zero = 0,
+    //             .cf = LV_IMG_SRC_FILE,
+    //         },
+    // };
+    extern const lv_img_dsc_t asset_evue_designer;
+    obj_setStruct(self, "img_dsc", asset_evue_designer);
 }
 
 void pika_lvgl_img_set_src(PikaObj* self, PikaObj* src) {
