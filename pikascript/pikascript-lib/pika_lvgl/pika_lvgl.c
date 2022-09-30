@@ -26,6 +26,7 @@
 #include "pika_lvgl_lv_timer_t.h"
 
 PikaObj* pika_lv_event_listener_g;
+Args* pika_lv_id_register_g;
 
 void pika_lvgl_STATE___init__(PikaObj* self) {
     obj_setInt(self, "DEFAULT", LV_STATE_DEFAULT);
@@ -199,6 +200,7 @@ PikaObj* pika_lvgl_scr_act(PikaObj* self) {
 void pika_lvgl___init__(PikaObj* self) {
     obj_newDirectObj(self, "lv_event_listener", New_TinyObj);
     pika_lv_event_listener_g = obj_getObj(self, "lv_event_listener");
+    pika_lv_id_register_g = New_args(NULL);
 }
 
 void pika_lvgl_obj___init__(PikaObj* self, PikaTuple* parent) {

@@ -1,23 +1,29 @@
 import pika_lvgl as lv
 import PikaStdLib
 
-style = lv.style_t()
-style.init()
-style.set_flex_flow(lv.FLEX_FLOW.ROW_WRAP)
-style.set_flex_main_place(lv.FLEX_ALIGN.SPACE_EVENLY)
-style.set_layout(lv.LAYOUT_FLEX.value)
-
-cont = lv.obj(lv.scr_act())
-cont.set_size(300, 220)
-cont.center()
-cont.add_style(style, 0)
-
-for i in range(8):
-    obj = lv.obj(cont)
-    obj.set_size(70, lv.SIZE.CONTENT)
-
-    label = lv.label(obj)
-    # label.set_text("{:d}".format(i))
-    label.center()
+import pika_lvgl as lv
+import PikaStdLib
+mem = PikaStdLib.MemChecker()
 
 
+def event_cb_1(evt:lv.lv_event):
+    print(evt.get_target().get_id())
+    print('mem used now: %0.2f kB' % (mem.getNow()))
+
+
+def event_cb_2(evt:lv.lv_event):
+    print(evt.get_target().get_id())
+    print('mem used now: %0.2f kB' % (mem.getNow()))
+
+
+btn1 = lv.btn(lv.scr_act())
+btn1.align(lv.ALIGN.TOP_MID, 0, 10)
+btn2 = lv.btn(lv.scr_act())
+btn2.align(lv.ALIGN.TOP_MID, 0, 50)
+btn1.set_id('id:btn1')
+btn1.add_event_cb(event_cb_1, lv.EVENT.CLICKED, 0)
+btn2.set_id('id:btn2')
+btn2.add_event_cb(event_cb_2, lv.EVENT.CLICKED, 0)
+
+print('mem used max: %0.2f kB' % (mem.getMax()))
+print('mem used now: %0.2f kB' % (mem.getNow()))

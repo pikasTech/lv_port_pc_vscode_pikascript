@@ -304,4 +304,23 @@ void pika_lvgl_lv_obj_set_flex_flow(PikaObj* self, int flow) {
     lv_obj_set_flex_flow(lv_obj, flow);
 }
 
+extern Args* pika_lv_id_register_g;
+void pika_lvgl_lv_obj_set_id(PikaObj* self, char* id) {
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    uintptr_t id_key = (uintptr_t)lv_obj;
+    Arg* id_arg = arg_newStr(id);
+    id_arg->name_hash = (Hash)id_key;
+    args_setArg(pika_lv_id_register_g, id_arg);
+}
+
+char* pika_lvgl_lv_obj_get_id(PikaObj* self) {
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    uintptr_t id_key = (uintptr_t)lv_obj;
+    Arg* id_arg = args_getArg_hash(pika_lv_id_register_g, (Hash)id_key);
+    if (NULL == id_arg) {
+        return NULL;
+    }
+    return arg_getStr(id_arg);
+}
+
 #endif
