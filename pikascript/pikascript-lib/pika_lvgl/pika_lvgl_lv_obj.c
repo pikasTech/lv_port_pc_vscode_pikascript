@@ -281,14 +281,27 @@ void pika_lvgl_lv_obj_transform_point(PikaObj* self,
     lv_obj_transform_point(lv_obj, lv_point, recursive, inv);
 }
 
-void pika_lvgl_lv_obj_add_flag(PikaObj *self, int flag){
+void pika_lvgl_lv_obj_add_flag(PikaObj* self, int flag) {
     lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
     lv_obj_add_flag(lv_obj, flag);
 }
 
-void pika_lvgl_lv_obj_clear_flag(PikaObj *self, int flag){
+void pika_lvgl_lv_obj_clear_flag(PikaObj* self, int flag) {
     lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
     lv_obj_clear_flag(lv_obj, flag);
+}
+
+void pika_lvgl_lv_obj_set_flex_align(PikaObj* self,
+                                     int main_place,
+                                     int cross_place,
+                                     int align) {
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    lv_obj_set_flex_align(lv_obj, main_place, cross_place, align);
+}
+
+void pika_lvgl_lv_obj_set_flex_flow(PikaObj* self, int flow) {
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    lv_obj_set_flex_flow(lv_obj, flow);
 }
 
 #endif

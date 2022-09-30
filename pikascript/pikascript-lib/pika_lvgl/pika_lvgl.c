@@ -10,6 +10,10 @@
 #include "pika_lvgl_ALIGN.h"
 #include "pika_lvgl_ANIM.h"
 #include "pika_lvgl_EVENT.h"
+#include "pika_lvgl_FLEX_ALIGN.h"
+#include "pika_lvgl_FLEX_FLOW.h"
+#include "pika_lvgl_LAYOUT_FLEX.h"
+#include "pika_lvgl_SIZE.h"
 #include "pika_lvgl_OPA.h"
 #include "pika_lvgl_PALETTE.h"
 #include "pika_lvgl_STATE.h"
@@ -253,4 +257,33 @@ PikaObj* pika_lvgl_timer_create_basic(PikaObj* self) {
     obj_setPtr(new_obj, "lv_timer", lv_timer);
     return new_obj;
 }
+
+void pika_lvgl_FLEX_FLOW___init__(PikaObj* self) {
+    obj_setInt(self, "ROW", LV_FLEX_FLOW_ROW);
+    obj_setInt(self, "COLUMN", LV_FLEX_FLOW_COLUMN);
+    obj_setInt(self, "ROW_WRAP", LV_FLEX_FLOW_ROW_WRAP);
+    obj_setInt(self, "ROW_REVERSE", LV_FLEX_FLOW_ROW_REVERSE);
+    obj_setInt(self, "ROW_WRAP_REVERSE", LV_FLEX_FLOW_ROW_WRAP_REVERSE);
+    obj_setInt(self, "COLUMN_WRAP", LV_FLEX_FLOW_COLUMN_WRAP);
+    obj_setInt(self, "COLUMN_REVERSE", LV_FLEX_FLOW_COLUMN_REVERSE);
+    obj_setInt(self, "COLUMN_WRAP_REVERSE", LV_FLEX_FLOW_COLUMN_WRAP_REVERSE);
+}
+
+void pika_lvgl_FLEX_ALIGN___init__(PikaObj* self) {
+    obj_setInt(self, "START", LV_FLEX_ALIGN_START);
+    obj_setInt(self, "END", LV_FLEX_ALIGN_END);
+    obj_setInt(self, "CENTER", LV_FLEX_ALIGN_CENTER);
+    obj_setInt(self, "SPACE_EVENLY", LV_FLEX_ALIGN_SPACE_EVENLY);
+    obj_setInt(self, "SPACE_AROUND", LV_FLEX_ALIGN_SPACE_AROUND);
+    obj_setInt(self, "SPACE_BETWEEN", LV_FLEX_ALIGN_SPACE_BETWEEN);
+}
+
+void pika_lvgl_LAYOUT_FLEX___init__(PikaObj* self) {
+    obj_setInt(self, "value", LV_LAYOUT_FLEX);
+}
+
+void pika_lvgl_SIZE___init__(PikaObj *self){
+    obj_setInt(self, "CONTENT", LV_SIZE_CONTENT);
+}
+
 #endif
