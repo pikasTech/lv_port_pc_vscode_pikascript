@@ -366,21 +366,17 @@ Arg* __vm_slice(PikaObj* self, Arg* end, Arg* obj, Arg* start, int step) {
     }
 
     if (ARG_TYPE_STRING == arg_getType(obj)) {
-        size_t len = strGetSize(arg_getStr(obj));
-        if (start_i < 0) {
-            start_i += len;
+        char* string_slice(Args * outBuffs, char* str, int start, int end);
+        Args buffs = {0};
+        Arg* sliced_arg = NULL;
+        char* sliced_str =
+            string_slice(&buffs, arg_getStr(obj), start_i, end_i);
+        if (NULL != sliced_str) {
+            sliced_arg = arg_newStr(sliced_str);
+        } else {
+            sliced_arg = arg_newNull();
         }
-        if (end_i < 0) {
-            end_i += len + 1;
-        }
-        Arg* sliced_arg = arg_newStr("");
-        for (int i = start_i; i < end_i; i++) {
-            Arg* i_arg = arg_newInt(i);
-            Arg* item_arg = __vm_get(self, i_arg, obj);
-            sliced_arg = arg_strAppend(sliced_arg, arg_getStr(item_arg));
-            arg_deinit(item_arg);
-            arg_deinit(i_arg);
-        }
+        strsDeinit(&buffs);
         return sliced_arg;
     }
 
@@ -1190,14 +1186,14 @@ static Arg* VM_instruction_handler_RUN(PikaObj* self,
     }
 #endif
 
-    /* get method host obj from self */
+    /* get method host obj from local scope */
     if (NULL == method_host) {
-        method_host = obj_getHostObjWithIsTemp(self, run_path, &is_temp);
+        method_host = obj_getHostObjWithIsTemp(vm->locals, run_path, &is_temp);
     }
 
     /* get method host obj from local scope */
     if (NULL == method_host) {
-        method_host = obj_getHostObjWithIsTemp(vm->locals, run_path, &is_temp);
+        method_host = obj_getHostObjWithIsTemp(vm->globals, run_path, &is_temp);
     }
 
     /* method host obj is not found */
@@ -1463,7 +1459,7 @@ static Arg* VM_instruction_handler_OUT(PikaObj* self,
         Arg* global_list_arg = arg_newStr(global_list);
         char* global_list_buff = arg_getStr(global_list_arg);
         /* for each arg arg in global_list */
-        char token_buff[32] = {0};
+        char token_buff[PIKA_NAME_BUFF_SIZE] = {0};
         for (int i = 0; i < strCountSign(global_list, ',') + 1; i++) {
             char* global_arg = strPopToken(token_buff, global_list_buff, ',');
             /* matched global arg, context set to global */
@@ -1658,14 +1654,14 @@ void operatorInfo_init(OperatorInfo* info,
     info->vm = vm;
     if (info->t1 == ARG_TYPE_INT) {
         info->i1 = arg_getInt(info->a1);
-        info->f1 = (float)info->i1;
+        info->f1 = (pika_float)info->i1;
     } else if (info->t1 == ARG_TYPE_FLOAT) {
         info->f1 = arg_getFloat(info->a1);
         info->i1 = (int)info->f1;
     }
     if (info->t2 == ARG_TYPE_INT) {
         info->i2 = arg_getInt(info->a2);
-        info->f2 = (float)info->i2;
+        info->f2 = (pika_float)info->i2;
     } else if (info->t2 == ARG_TYPE_FLOAT) {
         info->f2 = arg_getFloat(info->a2);
         info->i2 = (int)info->f2;
@@ -1832,7 +1828,7 @@ static void _OPT_EQU(OperatorInfo* op) {
         goto exit;
     }
     /* default: int and float */
-    is_equ = ((op->f1 - op->f2) * (op->f1 - op->f2) < (float)0.000001);
+    is_equ = ((op->f1 - op->f2) * (op->f1 - op->f2) < (pika_float)0.000001);
     goto exit;
 exit:
     if (strEqu("==", op->opt)) {
@@ -2018,14 +2014,14 @@ static Arg* VM_instruction_handler_OPT(PikaObj* self,
         op.res = arg_setInt(
             op.res, "",
             (op.f1 > op.f2) ||
-                ((op.f1 - op.f2) * (op.f1 - op.f2) < (float)0.000001));
+                ((op.f1 - op.f2) * (op.f1 - op.f2) < (pika_float)0.000001));
         goto exit;
     }
     if (strEqu("<=", data)) {
         op.res = arg_setInt(
             op.res, "",
             (op.f1 < op.f2) ||
-                ((op.f1 - op.f2) * (op.f1 - op.f2) < (float)0.000001));
+                ((op.f1 - op.f2) * (op.f1 - op.f2) < (pika_float)0.000001));
         goto exit;
     }
     if (strEqu("&", data)) {

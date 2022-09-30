@@ -305,6 +305,10 @@
         #define PIKA_PRINT_LLD_ENABLE 1
     #endif
 
+    #ifndef PIKA_FLOAT_TYPE_DOUBLE
+        #define PIKA_FLOAT_TYPE_DOUBLE 1
+    #endif
+
     /* configuration validation */
 
 #endif
