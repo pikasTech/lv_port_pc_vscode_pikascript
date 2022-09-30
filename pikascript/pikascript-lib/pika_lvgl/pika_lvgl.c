@@ -288,4 +288,8 @@ void pika_lvgl_SIZE___init__(PikaObj *self){
     obj_setInt(self, "CONTENT", LV_SIZE_CONTENT);
 }
 
+int pika_lvgl_pct(PikaObj *self, int x){
+    return LV_PCT(x);
+}
+
 #endif
