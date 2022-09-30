@@ -281,4 +281,14 @@ void pika_lvgl_lv_obj_transform_point(PikaObj* self,
     lv_obj_transform_point(lv_obj, lv_point, recursive, inv);
 }
 
+void pika_lvgl_lv_obj_add_flag(PikaObj *self, int flag){
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    lv_obj_add_flag(lv_obj, flag);
+}
+
+void pika_lvgl_lv_obj_clear_flag(PikaObj *self, int flag){
+    lv_obj_t* lv_obj = obj_getPtr(self, "lv_obj");
+    lv_obj_clear_flag(lv_obj, flag);
+}
+
 #endif
