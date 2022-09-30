@@ -1,13 +1,17 @@
 import pika_lvgl as lv
-import PikaStdLib as std
-import evue_asset as asset
+import PikaStdLib
+mem = PikaStdLib.MemChecker()
 
-img1 = lv.img(lv.scr_act())
-img1.set_src(asset.evue_designer())
-img1.align(lv.ALIGN.CENTER, 0, -20)
-img1.set_size(200, 200)
+obj1 = lv.obj(lv.scr_act())
+obj1.set_size(100, 50)
+obj1.align(lv.ALIGN.CENTER, -60, -30)
 
-img2 = lv.img(lv.scr_act())
-# img2.set_src(lv.SYMBOL.OK + "Accept")
-img2.align_to(img1, lv.ALIGN.OUT_BOTTOM_MID, 0, 20)
-std.MemChecker.now()
+obj2 = lv.obj(lv.scr_act())
+obj2.align(lv.ALIGN.CENTER, 60, 30)
+
+print('mem used max: %0.2f kB' % (mem.getMax()))
+print('mem used now: %0.2f kB' % (mem.getNow()))
+print(lv.obj.FLAG.ADV_HITTEST)
+print(lv.obj.FLAG.CLICK_FOCUSABLE)
+print('mem used max: %0.2f kB' % (mem.getMax()))
+print('mem used now: %0.2f kB' % (mem.getNow()))

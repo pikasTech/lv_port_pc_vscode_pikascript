@@ -13,12 +13,13 @@
 #include "pika_lvgl_OPA.h"
 #include "pika_lvgl_PALETTE.h"
 #include "pika_lvgl_STATE.h"
+#include "pika_lvgl_TEXT_DECOR.h"
 #include "pika_lvgl_arc.h"
+#include "pika_lvgl_flag_t.h"
 #include "pika_lvgl_indev_t.h"
 #include "pika_lvgl_lv_color_t.h"
 #include "pika_lvgl_lv_obj.h"
 #include "pika_lvgl_lv_timer_t.h"
-#include "pika_lvgl_TEXT_DECOR.h"
 
 PikaObj* pika_lv_event_listener_g;
 
@@ -39,7 +40,39 @@ void pika_lvgl_STATE___init__(PikaObj* self) {
     obj_setInt(self, "ANY", LV_STATE_ANY);
 }
 
-void pika_lvgl_TEXT_DECOR___init__(PikaObj *self){
+void pika_lvgl_flag_t___init__(PikaObj* self) {
+    obj_setInt(self, "HIDDEN", LV_OBJ_FLAG_HIDDEN);
+    obj_setInt(self, "CLICKABLE", LV_OBJ_FLAG_CLICKABLE);
+    obj_setInt(self, "CLICK_FOCUSABLE", LV_OBJ_FLAG_CLICK_FOCUSABLE);
+    obj_setInt(self, "CHECKABLE", LV_OBJ_FLAG_CHECKABLE);
+    obj_setInt(self, "SCROLLABLE", LV_OBJ_FLAG_SCROLLABLE);
+    obj_setInt(self, "SCROLL_ELASTIC", LV_OBJ_FLAG_SCROLL_ELASTIC);
+    obj_setInt(self, "SCROLL_MOMENTUM", LV_OBJ_FLAG_SCROLL_MOMENTUM);
+    obj_setInt(self, "SCROLL_ONE", LV_OBJ_FLAG_SCROLL_ONE);
+    obj_setInt(self, "SCROLL_CHAIN_HOR", LV_OBJ_FLAG_SCROLL_CHAIN_HOR);
+    obj_setInt(self, "SCROLL_CHAIN_VER", LV_OBJ_FLAG_SCROLL_CHAIN_VER);
+    obj_setInt(self, "SCROLL_CHAIN", LV_OBJ_FLAG_SCROLL_CHAIN);
+    obj_setInt(self, "SCROLL_ON_FOCUS", LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    obj_setInt(self, "SCROLL_WITH_ARROW", LV_OBJ_FLAG_SCROLL_WITH_ARROW);
+    obj_setInt(self, "SNAPPABLE", LV_OBJ_FLAG_SNAPPABLE);
+    obj_setInt(self, "PRESS_LOCK", LV_OBJ_FLAG_PRESS_LOCK);
+    obj_setInt(self, "EVENT_BUBBLE", LV_OBJ_FLAG_EVENT_BUBBLE);
+    obj_setInt(self, "GESTURE_BUBBLE", LV_OBJ_FLAG_GESTURE_BUBBLE);
+    obj_setInt(self, "ADV_HITTEST", LV_OBJ_FLAG_ADV_HITTEST);
+    obj_setInt(self, "IGNORE_LAYOUT", LV_OBJ_FLAG_IGNORE_LAYOUT);
+    obj_setInt(self, "FLOATING", LV_OBJ_FLAG_FLOATING);
+    obj_setInt(self, "OVERFLOW_VISIBLE", LV_OBJ_FLAG_OVERFLOW_VISIBLE);
+    obj_setInt(self, "LAYOUT_1", LV_OBJ_FLAG_LAYOUT_1);
+    obj_setInt(self, "LAYOUT_2", LV_OBJ_FLAG_LAYOUT_2);
+    obj_setInt(self, "WIDGET_1", LV_OBJ_FLAG_WIDGET_1);
+    obj_setInt(self, "WIDGET_2", LV_OBJ_FLAG_WIDGET_2);
+    obj_setInt(self, "USER_1", LV_OBJ_FLAG_USER_1);
+    obj_setInt(self, "USER_2", LV_OBJ_FLAG_USER_2);
+    obj_setInt(self, "USER_3", LV_OBJ_FLAG_USER_3);
+    obj_setInt(self, "USER_4", LV_OBJ_FLAG_USER_4);
+}
+
+void pika_lvgl_TEXT_DECOR___init__(PikaObj* self) {
     obj_setInt(self, "NONE", LV_TEXT_DECOR_NONE);
     obj_setInt(self, "UNDERLINE", LV_TEXT_DECOR_UNDERLINE);
     obj_setInt(self, "STRIKETHROUGH", LV_TEXT_DECOR_STRIKETHROUGH);
@@ -164,14 +197,21 @@ void pika_lvgl___init__(PikaObj* self) {
     pika_lv_event_listener_g = obj_getObj(self, "lv_event_listener");
 }
 
-PikaObj* pika_lvgl_obj(PikaObj* self, PikaObj* parent) {
-    lv_obj_t* lv_parent = obj_getPtr(parent, "lv_obj");
-    lv_obj_t* lv_obj = lv_obj_create(lv_parent);
-    PikaObj* new_obj = newNormalObj(New_pika_lvgl_lv_obj);
-    obj_setPtr(new_obj, "lv_obj", lv_obj);
-    return new_obj;
+void pika_lvgl_obj___init__(PikaObj* self, PikaTuple* parent) {
+    PikaObj* parent_obj = NULL;
+    if (NULL == parent) {
+        void pika_lvgl_flag_tMethod(PikaObj * self, Args * args);
+        class_defineConstructor(self, "FLAG()", pika_lvgl_flag_tMethod);
+        return;
+    }
+    if (tuple_getSize(parent) == 1) {
+        parent_obj = tuple_getPtr(parent, 0);
+        lv_obj_t* lv_parent = obj_getPtr(parent_obj, "lv_obj");
+        lv_obj_t* lv_obj = lv_obj_create(lv_parent);
+        obj_setPtr(self, "lv_obj", lv_obj);
+        return;
+    }
 }
-
 
 PikaObj* pika_lvgl_palette_lighten(PikaObj* self, int p, int lvl) {
     PikaObj* new_obj = newNormalObj(New_pika_lvgl_lv_color_t);

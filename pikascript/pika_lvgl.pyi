@@ -1,4 +1,5 @@
-﻿from PikaObj import *
+﻿from tkinter import HIDDEN
+from PikaObj import *
 
 
 def __init__(): ...
@@ -267,6 +268,37 @@ class style_t:
     def set_pad_gap(self, value: int): ...
     def prop_has_flag(self, prop: int, flag: int) -> int: ...
 
+class flag_t:
+    HIDDEN: int
+    CLICKABLE: int
+    CLICK_FOCUSABLE: int 
+    CHECKABLE: int
+    SCROLLABLE: int
+    SCROLL_ELASTIC: int
+    SCROLL_MOMENTUM: int
+    SCROLL_ONE: int
+    SCROLL_CHAIN_HOR: int
+    SCROLL_CHAIN_VER: int
+    SCROLL_CHAIN: int
+    SCROLL_ON_FOCUS: int
+    SCROLL_WITH_ARROW: int
+    SNAPPABLE: int
+    PRESS_LOCK: int
+    EVENT_BUBBLE: int
+    GESTURE_BUBBLE: int
+    ADV_HITTEST: int
+    IGNORE_LAYOUT: int
+    FLOATING: int
+    OVERFLOW_VISIBLE: int
+    LAYOUT_1: int
+    LAYOUT_2: int
+    WIDGET_1: int
+    WIDGET_2: int
+    USER_1: int
+    USER_2: int
+    USER_3: int
+    USER_4: int
+    def __init__(self): ...
 
 class lv_obj:
     def __init__(self, parent: lv_obj): ...
@@ -326,7 +358,10 @@ class indev_t:
     def get_vect(self, point: point_t): ...
 
 
-def obj(parent: lv_obj) -> lv_obj: ...
+class obj(lv_obj):
+    FLAG:flag_t
+    def __init__(self, *parent) : ...
+
 def indev_get_act() -> indev_t: ...
 
 
