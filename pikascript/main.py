@@ -1,29 +1,22 @@
 import pika_lvgl as lv
-import PikaStdLib as std
 import evue_asset
+import PikaStdLib as std
 
-def row_gap_anim(obj, v):
-    obj.set_style_pad_row(v, 0)
+try:
+    f = open('../logo.png', 'rb')
+    png_data = f.read(-1)
+except:
+    print("Could not find img_cogwheel_argb.png")
+    exit()
 
+img_cogwheel_argb = lv.img_dsc_t({
+    'data_size': len(png_data),
+    'data': png_data
+})
 
-def column_gap_anim(obj, v):
-    obj.set_style_pad_column(v, 0)
+img1 = lv.img(lv.scr_act())
+img1.set_src(img_cogwheel_argb)
+img1.align(lv.ALIGN.TOP_LEFT, 20, 20)
+img1.set_size(200, 50)
 
-#
-# Demonstrate the effect of column and row gap style properties
-#
-
-
-cont = lv.obj(lv.scr_act())
-cont.set_size(300, 220)
-cont.center()
-cont.set_flex_flow(lv.FLEX_FLOW.ROW_WRAP)
-
-for i in range(9):
-    obj = lv.obj(cont)
-    obj.set_size(70, lv.SIZE.CONTENT)
-
-    label = lv.label(obj)
-    label.set_text(str(i))
-    label.center()
-
+std.MemChecker.now()
