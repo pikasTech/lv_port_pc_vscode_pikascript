@@ -2,7 +2,6 @@ import pika_lvgl as lv
 import PikaStdLib as std
 import evue_asset
 
-
 def row_gap_anim(obj, v):
     obj.set_style_pad_row(v, 0)
 
@@ -28,4 +27,3 @@ for i in range(9):
     label.set_text(str(i))
     label.center()
 
-print(eval("1+2"))

@@ -201,6 +201,7 @@ void pika_lvgl___init__(PikaObj* self) {
     obj_newDirectObj(self, "lv_event_listener", New_TinyObj);
     pika_lv_event_listener_g = obj_getObj(self, "lv_event_listener");
     pika_lv_id_register_g = New_args(NULL);
+    lv_png_init();
 }
 
 void pika_lvgl_obj___init__(PikaObj* self, PikaTuple* parent) {
