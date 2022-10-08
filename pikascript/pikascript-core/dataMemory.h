@@ -41,6 +41,12 @@
 typedef struct {
     uint32_t heapUsed;
     uint32_t heapUsedMax;
+#if PIKA_ARG_CACHE_ENABLE
+    uint8_t* cache_pool[PIKA_ARG_CACHE_POOL_SIZE];
+    uint32_t cache_pool_top;
+#endif
+    uint32_t alloc_times;
+    uint32_t alloc_times_cache;
 } PikaMemInfo;
 
 typedef uint8_t* BitMap;
@@ -77,6 +83,8 @@ void bitmap_deinit(BitMap bitmap);
 
 void mem_pool_deinit(void);
 void mem_pool_init(void);
+
+#define mem_align(_size) ((((_size) + 4 - 1) & ~(4 - 1)))
 
 #undef __DATA_MEMORY_CLASS_IMPLEMENT__
 #endif
