@@ -437,6 +437,9 @@ exit:
 }
 
 PikaObj* _arg_to_obj(Arg* self, PIKA_BOOL* pIsTemp) {
+    if (NULL == self) {
+        return NULL;
+    }
     if (argType_isObject(arg_getType(self))) {
         return arg_getPtr(self);
     }
@@ -505,12 +508,12 @@ static PikaObj* __obj_getObjWithKeepDeepth(PikaObj* self,
                                            PIKA_BOOL* pIsTemp,
                                            int32_t keepDeepth) {
     char objPath_buff[PIKA_PATH_BUFF_SIZE];
+    char* objPath_ptr = objPath_buff;
     __platform_memcpy(objPath_buff, objPath, strGetSize(objPath) + 1);
-    char token_buff[PIKA_NAME_BUFF_SIZE] = {0};
     int32_t token_num = strGetTokenNum(objPath, '.');
     PikaObj* obj = self;
     for (int32_t i = 0; i < token_num - keepDeepth; i++) {
-        char* token = strPopToken(token_buff, objPath_buff, '.');
+        char* token = strPopFirstToken(&objPath_ptr, '.');
         obj = __obj_getObjDirect(obj, token, pIsTemp);
         if (obj == NULL) {
             goto exit;
@@ -555,11 +558,10 @@ char* methodArg_getTypeList(Arg* method_arg, char* buffs, size_t size) {
 
 char* methodArg_getName(Arg* method_arg, char* buffs, size_t size) {
     char* method_dec = strCopy(buffs, methodArg_getDec(method_arg));
-    char res[PIKA_NAME_BUFF_SIZE] = {0};
     if (strGetSize(method_dec) > size) {
         return NULL;
     }
-    strPopToken(res, method_dec, '(');
+    char* res = strPopFirstToken(&method_dec, '(');
     strCopy(buffs, res);
     return buffs;
 }
@@ -819,7 +821,7 @@ enum shell_state obj_runChar(PikaObj* self, char inputChar) {
     char* rxBuff = (char*)obj_getBytes(self, "__shbuf");
     char* input_line = NULL;
     int is_in_block = obj_getInt(self, "__shinb");
-#ifndef __linux
+#if !(defined(__linux) || defined(_WIN32))
     __platform_printf("%c", inputChar);
 #endif
     if ((inputChar == '\b') || (inputChar == 127)) {
@@ -837,7 +839,7 @@ enum shell_state obj_runChar(PikaObj* self, char inputChar) {
         return SHELL_STATE_CONTINUE;
     }
     if ((inputChar == '\r') || (inputChar == '\n')) {
-#ifndef __linux
+#if !(defined(__linux) || defined(_WIN32))
         __platform_printf("\r\n");
 #endif
         /* still in block */
@@ -977,23 +979,23 @@ void args_setSysOut(Args* args, char* str) {
 }
 
 void method_returnBytes(Args* args, uint8_t* val) {
-    args_setBytes(args, "return", val, PIKA_BYTES_DEFAULT_SIZE);
+    args_setBytes(args, "@rt", val, PIKA_BYTES_DEFAULT_SIZE);
 }
 
 void method_returnStr(Args* args, char* val) {
-    args_setStr(args, "return", val);
+    args_setStr(args, "@rt", val);
 }
 
 void method_returnInt(Args* args, int64_t val) {
-    args_setInt(args, "return", val);
+    args_setInt(args, "@rt", val);
 }
 
 void method_returnFloat(Args* args, pika_float val) {
-    args_setFloat(args, "return", val);
+    args_setFloat(args, "@rt", val);
 }
 
 void method_returnPtr(Args* args, void* val) {
-    args_setPtr(args, "return", val);
+    args_setPtr(args, "@rt", val);
 }
 
 void method_returnObj(Args* args, void* val) {
@@ -1007,11 +1009,11 @@ void method_returnObj(Args* args, void* val) {
     } else {
         type = ARG_TYPE_OBJECT_NEW;
     }
-    args_setPtrWithType(args, "return", type, val);
+    args_setPtrWithType(args, "@rt", type, val);
 }
 
 void method_returnArg(Args* args, Arg* arg) {
-    arg = arg_setName(arg, "return");
+    arg = arg_setName(arg, "@rt");
     args_setArg(args, arg);
 }
 
@@ -1074,8 +1076,19 @@ PikaObj* obj_importModuleWithByteCode(PikaObj* self,
                                       char* name,
                                       uint8_t* byteCode) {
     PikaObj* New_PikaStdLib_SysObj(Args * args);
-    obj_newDirectObj(self, name, New_PikaStdLib_SysObj);
-    pikaVM_runByteCode(obj_getObj(self, name), (uint8_t*)byteCode);
+    if (!obj_isArgExist(__pikaMain, name)) {
+        obj_newDirectObj(__pikaMain, name, New_PikaStdLib_SysObj);
+        pikaVM_runByteCode(obj_getObj(__pikaMain, name), (uint8_t*)byteCode);
+    }
+    if (self != __pikaMain) {
+        Arg* module_arg = obj_getArg(__pikaMain, name);
+        PikaObj* module_obj = arg_getPtr(module_arg);
+        obj_setArg(self, name, module_arg);
+        arg_setIsWeakRef(obj_getArg(self, name), PIKA_TRUE);
+        pika_assert(argType_isObject(arg_getType(module_arg)));
+        /* decrase refcnt to avoid circle reference */
+        obj_refcntDec(module_obj);
+    }
     return self;
 }
 
@@ -1089,33 +1102,33 @@ PikaObj* obj_importModuleWithByteCodeFrame(PikaObj* self,
 }
 
 PikaObj* Obj_linkLibraryFile(PikaObj* self, char* input_file_name) {
-    obj_newMetaObj(self, "__lib", New_LibObj);
-    LibObj* lib = obj_getObj(self, "__lib");
+    obj_newMetaObj(self, "@lib", New_LibObj);
+    LibObj* lib = obj_getObj(self, "@lib");
     LibObj_loadLibraryFile(lib, input_file_name);
     return self;
 }
 
 PikaObj* obj_linkLibrary(PikaObj* self, uint8_t* library_bytes) {
-    obj_newMetaObj(self, "__lib", New_LibObj);
-    LibObj* lib = obj_getObj(self, "__lib");
+    obj_newMetaObj(self, "@lib", New_LibObj);
+    LibObj* lib = obj_getObj(self, "@lib");
     LibObj_loadLibrary(lib, library_bytes);
     return self;
 }
 
 PikaObj* obj_linkLibObj(PikaObj* self, LibObj* library) {
-    obj_setPtr(self, "__lib", library);
+    obj_setPtr(self, "@lib", library);
     return self;
 }
 
 uint8_t* obj_getByteCodeFromModule(PikaObj* self, char* module_name) {
-    /* exit when no found '__lib' */
-    if (!obj_isArgExist(self, "__lib")) {
+    /* exit when no found '@lib' */
+    if (!obj_isArgExist(self, "@lib")) {
         return NULL;
     }
     /* find module from the library */
-    LibObj* lib = obj_getPtr(self, "__lib");
+    LibObj* lib = obj_getPtr(self, "@lib");
     PikaObj* module = obj_getObj(lib, module_name);
-    /* exit when no module in '__lib' */
+    /* exit when no module in '@lib' */
     if (NULL == module) {
         return NULL;
     }

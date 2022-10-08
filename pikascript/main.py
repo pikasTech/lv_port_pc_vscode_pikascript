@@ -20,3 +20,4 @@ img1.align(lv.ALIGN.TOP_LEFT, 20, 20)
 img1.set_size(200, 50)
 
 std.MemChecker.now()
+

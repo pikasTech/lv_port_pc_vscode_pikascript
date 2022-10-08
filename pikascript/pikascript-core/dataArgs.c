@@ -92,7 +92,7 @@ PIKA_RES args_pushArg(Args* self, Arg* arg) {
         return PIKA_RES_ERR_ARG_NO_FOUND;
     }
     Arg* new_arg = NULL;
-    if (!arg_getSerialized(arg)) {
+    if (!arg_isSerialized(arg)) {
         new_arg = arg_copy(arg);
         arg_deinit(arg);
     } else {
@@ -310,7 +310,7 @@ PIKA_RES __updateArg(Args* self, Arg* argNew) {
     arg_setNext((Arg*)priorNode, (Arg*)nodeToUpdate);
     goto exit;
 exit:
-    if (!arg_getSerialized(argNew)) {
+    if (!arg_isSerialized(argNew)) {
         return PIKA_RES_OK;
     }
     arg_freeContent(argNew);
@@ -738,13 +738,13 @@ char* strsFormatList(Args* out_buffs, char* fmt, PikaList* list) {
     Args buffs = {0};
     char* res = NULL;
     char* fmt_buff = strsCopy(&buffs, fmt);
-    char* fmt_item = strsPopToken(&buffs, fmt_buff, '%');
+    char* fmt_item = strsPopToken(&buffs, &fmt_buff, '%');
     Arg* res_buff = arg_newStr(fmt_item);
 
     for (size_t i = 0; i < list_getSize(list); i++) {
         Args buffs_item = {0};
         Arg* arg = list_getArg(list, i);
-        char* fmt_item = strsPopToken(&buffs_item, fmt_buff, '%');
+        char* fmt_item = strsPopToken(&buffs_item, &fmt_buff, '%');
         fmt_item = strsAppend(&buffs_item, "%", fmt_item);
         char* str_format = strsFormatArg(&buffs_item, fmt_item, arg);
         if (NULL == str_format) {
