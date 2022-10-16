@@ -26,6 +26,7 @@
  */
 
 #include "PikaObj.h"
+#include <stdint.h>
 #include "BaseObj.h"
 #include "PikaCompiler.h"
 #include "PikaPlatform.h"
@@ -87,7 +88,6 @@ char* fast_itoa(char* buf, uint32_t val) {
     *p = '\0';
     while (val >= 100) {
         uint32_t const old = val;
-
         p -= 2;
         val /= 100;
         __platform_memcpy(p, &str100p[old - (val * 100)], sizeof(uint16_t));
@@ -320,22 +320,77 @@ PikaObj* obj_getClassObjByNewFun(PikaObj* context,
     return thisClass;
 }
 
+Arg* _obj_getProp(PikaObj* obj, char* name) {
+    NativeProperty* prop = obj_getPtr(obj, "@p");
+    PikaObj* class_obj = NULL;
+    Arg* method = NULL;
+    if (NULL == prop) {
+        if (NULL != obj->constructor) {
+            class_obj = obj_getClassObj(obj);
+            prop = obj_getPtr(class_obj, "@p");
+        }
+    }
+    Hash method_hash = hash_time33(name);
+    while (1) {
+        if (prop == NULL) {
+            break;
+        }
+        int size = prop->methodGroupCount;
+        /* binary search */
+        if (size == 0) {
+            goto next;
+        }
+        if (size > 16) {
+            int left = 0;
+            int right = size - 1;
+            int mid = 0;
+            while (1) {
+                if (left > right) {
+                    break;
+                }
+                mid = (right + left) >> 1;
+                Arg* prop_this = (Arg*)(prop->methodGroup + mid);
+                if (prop_this->name_hash == method_hash) {
+                    method = prop_this;
+                    goto exit;
+                } else if (prop_this->name_hash < method_hash) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        } else {
+            for (int i = 0; i < (int)prop->methodGroupCount; i++) {
+                Arg* prop_this = (Arg*)(prop->methodGroup + i);
+                if (prop_this->name_hash == method_hash) {
+                    method = prop_this;
+                    goto exit;
+                }
+            }
+        }
+        goto next;
+    next:
+        prop = (NativeProperty*)prop->super;
+    }
+exit:
+    if (NULL != class_obj) {
+        obj_deinit_no_del(class_obj);
+    }
+    return method;
+}
+
 Arg* _obj_getMethodArg(PikaObj* obj, char* methodPath, Arg* arg_reg) {
     Arg* method = NULL;
     char* methodName = strPointToLastToken(methodPath, '.');
     method = obj_getArg(obj, methodName);
-    PikaObj* methodHostClass;
     if (NULL != method) {
         method = arg_copy_noalloc(method, arg_reg);
         goto exit;
     }
-    methodHostClass = obj_getClassObj(obj);
-    if (NULL == methodHostClass) {
-        method = NULL;
+    method = _obj_getProp(obj, methodName);
+    if (NULL != method) {
         goto exit;
     }
-    method = arg_copy_noalloc(obj_getArg(methodHostClass, methodName), arg_reg);
-    obj_deinit_no_del(methodHostClass);
 exit:
     return method;
 }
@@ -368,18 +423,10 @@ void* getNewClassObjFunByName(PikaObj* obj, char* name) {
     return newClassObjFun;
 }
 
-int32_t __foreach_removeMethodInfo(Arg* argNow, Args* argList) {
-    if (arg_getType(argNow) == ARG_TYPE_METHOD_NATIVE) {
-        args_removeArg(argList, argNow);
-        return 0;
-    }
-    return 0;
-}
-
 PikaObj* removeMethodInfo(PikaObj* thisClass) {
 #if PIKA_METHOD_CACHE_ENABLE
 #else
-    args_foreach(thisClass->list, __foreach_removeMethodInfo, thisClass->list);
+    args_removeArg(thisClass->list, args_getArg(thisClass->list, "@p"));
 #endif
     return thisClass;
 }
@@ -479,14 +526,22 @@ static PikaObj* __obj_getObjDirect(PikaObj* self,
         return NULL;
     }
     /* finded object, check type*/
-    ArgType type = args_getType(self->list, name);
+    Arg* arg_obj = args_getArg(self->list, name);
+    ArgType type = ARG_TYPE_NONE;
+    if (NULL == arg_obj) {
+        arg_obj = _obj_getProp(self, name);
+    }
+    if (NULL == arg_obj) {
+        return NULL;
+    }
+    type = arg_getType(arg_obj);
     /* found meta Object */
     if (type == ARG_TYPE_OBJECT_META) {
         return __obj_initSubObj(self, name);
     }
     /* found Objcet */
     if (argType_isObject(type)) {
-        return args_getPtr(self->list, name);
+        return arg_getPtr(arg_obj);
     }
 #if !PIKA_NANO_ENABLE
     /* found class */
@@ -494,8 +549,7 @@ static PikaObj* __obj_getObjDirect(PikaObj* self,
         type == ARG_TYPE_METHOD_CONSTRUCTOR) {
         *pIsTemp = PIKA_TRUE;
         PikaObj* method_args_obj = New_TinyObj(NULL);
-        Arg* cls_obj_arg = obj_runMethodArg(self, method_args_obj,
-                                            args_getArg(self->list, name));
+        Arg* cls_obj_arg = obj_runMethodArg(self, method_args_obj, arg_obj);
         obj_deinit(method_args_obj);
         if (type == ARG_TYPE_METHOD_NATIVE_CONSTRUCTOR) {
             obj_runNativeMethod(arg_getPtr(cls_obj_arg), "__init__", NULL);
@@ -505,7 +559,7 @@ static PikaObj* __obj_getObjDirect(PikaObj* self,
         return res;
     }
 #endif
-    return _arg_to_obj(args_getArg(self->list, name), pIsTemp);
+    return _arg_to_obj(arg_obj, pIsTemp);
 }
 
 static PikaObj* __obj_getObjWithKeepDeepth(PikaObj* self,
@@ -514,7 +568,7 @@ static PikaObj* __obj_getObjWithKeepDeepth(PikaObj* self,
                                            int32_t keepDeepth) {
     char objPath_buff[PIKA_PATH_BUFF_SIZE];
     char* objPath_ptr = objPath_buff;
-    __platform_memcpy(objPath_buff, objPath, strGetSize(objPath) + 1);
+    strcpy(objPath_buff, objPath);
     int32_t token_num = strGetTokenNum(objPath, '.');
     PikaObj* obj = self;
     for (int32_t i = 0; i < token_num - keepDeepth; i++) {
@@ -546,29 +600,31 @@ PikaObj* obj_getHostObjWithIsTemp(PikaObj* self,
 }
 
 Method methodArg_getPtr(Arg* method_arg) {
-    uint32_t size_ptr = sizeof(void*);
-    void* info = arg_getContent(method_arg);
-    void* ptr = NULL;
-    __platform_memcpy(&ptr, info, size_ptr);
-    return (Method)ptr;
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    return method_store->ptr;
 }
 
 char* methodArg_getTypeList(Arg* method_arg, char* buffs, size_t size) {
-    char* method_dec = strCopy(buffs, methodArg_getDec(method_arg));
-    if (strGetSize(method_dec) > size) {
-        return NULL;
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    if (NULL != method_store->type_list) {
+        return strcpy(buffs, method_store->type_list);
     }
-    return strCut(buffs, method_dec, '(', ')');
+    char* method_dec = methodArg_getDec(method_arg);
+    pika_assert(strGetSize(method_dec) <= size);
+    char* res = strCut(buffs, method_dec, '(', ')');
+    pika_assert(NULL != res);
+    return res;
 }
 
 char* methodArg_getName(Arg* method_arg, char* buffs, size_t size) {
-    char* method_dec = strCopy(buffs, methodArg_getDec(method_arg));
-    if (strGetSize(method_dec) > size) {
-        return NULL;
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    if (NULL != method_store->name) {
+        return strcpy(buffs, method_store->name);
     }
-    char* res = strPopFirstToken(&method_dec, '(');
-    strCopy(buffs, res);
-    return buffs;
+    char* method_dec = methodArg_getDec(method_arg);
+    pika_assert(strGetSize(method_dec) <= size);
+    char* res = strGetFirstToken(buffs, method_dec, '(');
+    return res;
 }
 
 Method obj_getNativeMethod(PikaObj* self, char* method_name) {
@@ -582,31 +638,27 @@ Method obj_getNativeMethod(PikaObj* self, char* method_name) {
 }
 
 ByteCodeFrame* methodArg_getBytecodeFrame(Arg* method_arg) {
-    uint32_t size_ptr = sizeof(void*);
-    void* info = arg_getContent(method_arg) + size_ptr;
-    ByteCodeFrame* ptr = NULL;
-    __platform_memcpy(&ptr, info, size_ptr);
-    return ptr;
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    return method_store->bytecode_frame;
 }
 
 char* methodArg_getDec(Arg* method_arg) {
-    uint32_t size_ptr = sizeof(void*);
-    void* info = arg_getContent(method_arg);
-    return (char*)((uintptr_t)info + 3 * size_ptr);
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    return method_store->declareation;
 }
 
 PikaObj* methodArg_getDefContext(Arg* method_arg) {
-    uint32_t size_ptr = sizeof(void*);
-    void* info = arg_getContent(method_arg) + 2 * size_ptr;
-    PikaObj* context = NULL;
-    __platform_memcpy(&context, info, size_ptr);
-    return context;
+    MethodProp* method_store = (MethodProp*)arg_getContent(method_arg);
+    return method_store->def_context;
 }
 
 void _update_proxy(PikaObj* self, char* name) {
 #if PIKA_NANO_ENABLE
     return;
 #endif
+    if (name[0] != '_' || name[1] != '_') {
+        return;
+    }
     if (!obj_getFlag(self, OBJ_FLAG_PROXY_GETATTRIBUTE)) {
         if (strEqu(name, "__getattribute__")) {
             obj_setFlag(self, OBJ_FLAG_PROXY_GETATTRIBUTE);
@@ -628,55 +680,52 @@ void _update_proxy(PikaObj* self, char* name) {
 }
 
 static void obj_saveMethodInfo(PikaObj* self, MethodInfo* method_info) {
-    method_info->pars = method_info->dec;
     Arg* arg = New_arg(NULL);
-    uint32_t size_pars = strGetSize(method_info->pars);
-    uintptr_t method_info_bytecode_frame =
-        (uintptr_t)method_info->bytecode_frame;
-    uintptr_t method_info_def_context = (uintptr_t)method_info->def_context;
+    MethodProp method_store = {
+        .ptr = method_info->ptr,
+        .bytecode_frame = method_info->bytecode_frame,
+        .def_context = method_info->def_context,
+        .declareation = method_info->dec,  // const
+        .type_list = method_info->typelist,
+        .name = method_info->name,
+    };
+    char* name = method_info->name;
+    if (NULL == method_info->name) {
+        char name_buff[PIKA_LINE_BUFF_SIZE / 2] = {0};
+        name = strGetFirstToken(name_buff, method_info->dec, '(');
+    }
     /* the first arg_value */
-    arg =
-        arg_setPtr(arg, method_info->name, method_info->type, method_info->ptr);
-    /* the seconed */
-    arg = arg_append(arg, &(method_info_bytecode_frame),
-                     sizeof(method_info_bytecode_frame));
-    arg = arg_append(arg, &(method_info_def_context),
-                     sizeof(method_info_def_context));
-    arg = arg_append(arg, method_info->pars, size_pars + 1);
-
-    _update_proxy(self, method_info->name);
+    arg = arg_setStruct(arg, name, &method_store, sizeof(method_store));
+    pika_assert(NULL != arg);
+    arg_setType(arg, method_info->type);
+    _update_proxy(self, name);
     args_setArg(self->list, arg);
 }
 
 static int32_t __class_defineMethodWithType(PikaObj* self,
                                             char* declareation,
+                                            char* name,
+                                            char* typelist,
                                             Method method_ptr,
                                             ArgType method_type,
                                             PikaObj* def_context,
                                             ByteCodeFrame* bytecode_frame) {
-    int32_t size = strGetSize(declareation);
     int32_t res = 0;
     Args buffs = {0};
-    char* clean_declareation =
-        strDeleteChar(args_getBuff(&buffs, size), declareation, ' ');
-    char* method_path =
-        strGetFirstToken(args_getBuff(&buffs, size), clean_declareation, '(');
-
-    PikaObj* method_host = obj_getHostObj(self, method_path);
+    PikaObj* method_host = self;
     MethodInfo method_info = {0};
-    char* method_name;
     if (NULL == method_host) {
         /* no found method object */
         res = 1;
         goto exit;
     }
-    method_name = strPointToLastToken(method_path, '.');
-    method_info.dec = clean_declareation;
-    method_info.name = method_name;
+    method_info.dec = declareation;
+    method_info.name = name;
     method_info.ptr = (void*)method_ptr;
     method_info.type = method_type;
     method_info.def_context = def_context;
     method_info.bytecode_frame = bytecode_frame;
+    method_info.typelist = typelist;
     obj_saveMethodInfo(method_host, &method_info);
     res = 0;
     goto exit;
@@ -687,18 +736,20 @@ exit:
 
 /* define a constructor method */
 int32_t class_defineConstructor(PikaObj* self,
-                                char* declareation,
+                                char* name,
+                                char* typelist,
                                 Method methodPtr) {
-    return __class_defineMethodWithType(self, declareation, methodPtr,
+    return __class_defineMethodWithType(self, NULL, name, typelist, methodPtr,
                                         ARG_TYPE_METHOD_NATIVE_CONSTRUCTOR,
                                         NULL, NULL);
 }
 
 /* define a native method as default */
 int32_t class_defineMethod(PikaObj* self,
-                           char* declareation,
+                           char* name,
+                           char* typelist,
                            Method methodPtr) {
-    return __class_defineMethodWithType(self, declareation, methodPtr,
+    return __class_defineMethodWithType(self, NULL, name, typelist, methodPtr,
                                         ARG_TYPE_METHOD_NATIVE, NULL, NULL);
 }
 
@@ -708,8 +759,8 @@ int32_t class_defineRunTimeConstructor(PikaObj* self,
                                        Method methodPtr,
                                        PikaObj* def_context,
                                        ByteCodeFrame* bytecode_frame) {
-    return __class_defineMethodWithType(self, declareation, methodPtr,
-                                        ARG_TYPE_METHOD_CONSTRUCTOR,
+    return __class_defineMethodWithType(self, declareation, NULL, NULL,
+                                        methodPtr, ARG_TYPE_METHOD_CONSTRUCTOR,
                                         def_context, bytecode_frame);
 }
 
@@ -719,9 +770,9 @@ int32_t class_defineObjectMethod(PikaObj* self,
                                  Method methodPtr,
                                  PikaObj* def_context,
                                  ByteCodeFrame* bytecode_frame) {
-    return __class_defineMethodWithType(self, declareation, methodPtr,
-                                        ARG_TYPE_METHOD_OBJECT, def_context,
-                                        bytecode_frame);
+    return __class_defineMethodWithType(self, declareation, NULL, NULL,
+                                        methodPtr, ARG_TYPE_METHOD_OBJECT,
+                                        def_context, bytecode_frame);
 }
 
 /* define a static method as default */
@@ -730,9 +781,9 @@ int32_t class_defineStaticMethod(PikaObj* self,
                                  Method methodPtr,
                                  PikaObj* def_context,
                                  ByteCodeFrame* bytecode_frame) {
-    return __class_defineMethodWithType(self, declareation, methodPtr,
-                                        ARG_TYPE_METHOD_STATIC, def_context,
-                                        bytecode_frame);
+    return __class_defineMethodWithType(self, declareation, NULL, NULL,
+                                        methodPtr, ARG_TYPE_METHOD_STATIC,
+                                        def_context, bytecode_frame);
 }
 
 VMParameters* obj_runDirect(PikaObj* self, char* cmd) {
@@ -810,22 +861,26 @@ static void __clearBuff(char* buff, int size) {
     }
 }
 
-static void __obj_runCharBeforeRun(PikaObj* self) {
-    struct shell_config* cfg = args_getStruct(self->list, "__shcfg");
+static void _do__obj_runCharBeforeRun(PikaObj* self, struct shell_config* cfg) {
     /* create the line buff for the first time */
-    obj_setBytes(self, "__shbuf", NULL, PIKA_LINE_BUFF_SIZE);
-    obj_setInt(self, "__shinb", 0);
-    /* print out the prefix when first entry */
+    obj_setBytes(self, "@sh_buff", NULL, PIKA_LINE_BUFF_SIZE);
+    obj_setInt(self, "@sh_is_in_block", 0);
     __platform_printf(cfg->prefix);
 }
 
-enum shell_state obj_runChar(PikaObj* self, char inputChar) {
+static void __obj_runCharBeforeRun(PikaObj* self) {
     struct shell_config* cfg = args_getStruct(self->list, "__shcfg");
-    __obj_shellLineHandler_t __lineHandler_fun =
-        (__obj_shellLineHandler_t)obj_getPtr(self, "__shhdl");
-    char* rxBuff = (char*)obj_getBytes(self, "__shbuf");
+    /* print out the prefix when first entry */
+    _do__obj_runCharBeforeRun(self, cfg);
+}
+
+enum shell_state _do_obj_runChar(PikaObj* self,
+                                 char inputChar,
+                                 struct shell_config* cfg,
+                                 __obj_shellLineHandler_t __lineHandler_fun) {
+    char* rxBuff = (char*)obj_getBytes(self, "@sh_buff");
+    int is_in_block = obj_getInt(self, "@sh_is_in_block");
     char* input_line = NULL;
-    int is_in_block = obj_getInt(self, "__shinb");
 #if !(defined(__linux) || defined(_WIN32))
     __platform_printf("%c", inputChar);
 #endif
@@ -854,14 +909,15 @@ enum shell_state obj_runChar(PikaObj* self, char inputChar) {
             char _n = '\n';
             strAppendWithSize(rxBuff, &_n, 1);
             char* shell_buff_new =
-                strsAppend(&buffs, obj_getStr(self, "shell_buff"), rxBuff);
-            obj_setStr(self, "shell_buff", shell_buff_new);
+                strsAppend(&buffs, obj_getStr(self, "@sh_block"), rxBuff);
+            obj_setStr(self, "@sh_block", shell_buff_new);
             strsDeinit(&buffs);
             /* go out from block */
             if ((rxBuff[0] != ' ') && (rxBuff[0] != '\t')) {
-                obj_setInt(self, "__shinb", 0);
-                input_line = obj_getStr(self, "shell_buff");
-                enum shell_state state = __lineHandler_fun(self, input_line);
+                obj_setInt(self, "@sh_is_in_block", 0);
+                input_line = obj_getStr(self, "@sh_block");
+                enum shell_state state =
+                    __lineHandler_fun(self, input_line, cfg);
                 __platform_printf(">>> ");
                 return state;
             } else {
@@ -873,22 +929,29 @@ enum shell_state obj_runChar(PikaObj* self, char inputChar) {
         if (0 != strGetSize(rxBuff)) {
             /* go in block */
             if (rxBuff[strGetSize(rxBuff) - 1] == ':') {
-                obj_setInt(self, "__shinb", 1);
+                obj_setInt(self, "@sh_is_in_block", 1);
                 char _n = '\n';
                 strAppendWithSize(rxBuff, &_n, 1);
-                obj_setStr(self, "shell_buff", rxBuff);
+                obj_setStr(self, "@sh_block", rxBuff);
                 __clearBuff(rxBuff, PIKA_LINE_BUFF_SIZE);
                 __platform_printf("... ");
                 return SHELL_STATE_CONTINUE;
             }
         }
         input_line = rxBuff;
-        enum shell_state state = __lineHandler_fun(self, input_line);
+        enum shell_state state = __lineHandler_fun(self, input_line, cfg);
         __platform_printf(cfg->prefix);
         __clearBuff(rxBuff, PIKA_LINE_BUFF_SIZE);
         return state;
     }
     return SHELL_STATE_CONTINUE;
+}
+
+enum shell_state obj_runChar(PikaObj* self, char inputChar) {
+    struct shell_config* cfg = args_getStruct(self->list, "__shcfg");
+    __obj_shellLineHandler_t __lineHandler_fun =
+        (__obj_shellLineHandler_t)obj_getPtr(self, "__shhdl");
+    return _do_obj_runChar(self, inputChar, cfg, __lineHandler_fun);
 }
 
 static void obj_shellConfig(PikaObj* self,
@@ -903,23 +966,101 @@ static void obj_shellConfig(PikaObj* self,
 void obj_shellLineProcess(PikaObj* self,
                           __obj_shellLineHandler_t __lineHandler_fun,
                           struct shell_config* cfg) {
-    /* config the shell */
+    /* config the global shell */
     obj_shellConfig(self, __lineHandler_fun, cfg);
 
     /* init the shell */
     __obj_runCharBeforeRun(self);
 
     /* getchar and run */
+    char inputChar[2] = {0};
+    while (1) {
+        inputChar[1] = inputChar[0];
+        inputChar[0] = __platform_getchar();
+
+        /* #! xxx */
+        if (inputChar[0] == '!' && inputChar[1] == '#') {
+            /* start */
+            char* buff = pikaMalloc(PIKA_READ_FILE_BUFF_SIZE);
+            char input[2] = {0};
+            int buff_i = 0;
+            PIKA_BOOL is_exit = PIKA_FALSE;
+            PIKA_BOOL is_first_line = PIKA_TRUE;
+            while (1) {
+                input[1] = input[0];
+                input[0] = __platform_getchar();
+                if (input[0] == '!' && input[1] == '#') {
+                    buff[buff_i - 1] = 0;
+                    for (int i = 0; i < 4; i++) {
+                        /* eat 'pika' */
+                        __platform_getchar();
+                    }
+                    break;
+                }
+                if ('\r' == input[0]) {
+                    continue;
+                }
+                if (is_first_line) {
+                    if ('\n' == input[0]) {
+                        is_first_line = PIKA_FALSE;
+                    }
+                    continue;
+                }
+                buff[buff_i++] = input[0];
+            }
+            /* end */
+            __platform_printf("\r\n=============== [code] ===============\r\n");
+            size_t len = strGetSize(buff);
+            for (size_t i = 0; i < len; i++) {
+                if (buff[i] == '\r') {
+                    continue;
+                }
+                if (buff[i] == '\n') {
+                    __platform_printf("\r\n");
+                    continue;
+                }
+                __platform_printf("%c", buff[i]);
+            }
+            __platform_printf("\r\n");
+            __platform_printf("=============== [code] ===============\r\n");
+            obj_run(self, (char*)buff);
+            if (NULL != strstr(buff, "exit()")) {
+                is_exit = PIKA_TRUE;
+            }
+            pikaFree(buff, PIKA_READ_FILE_BUFF_SIZE);
+            if (is_exit) {
+                return;
+            }
+            __platform_printf(cfg->prefix);
+            continue;
+        }
+
+        if (SHELL_STATE_EXIT ==
+            _do_obj_runChar(self, inputChar[0], cfg, __lineHandler_fun)) {
+            break;
+        }
+    }
+}
+
+void _temp_obj_shellLineProcess(PikaObj* self,
+                                __obj_shellLineHandler_t __lineHandler_fun,
+                                struct shell_config* cfg) {
+    /* init the shell */
+    _do__obj_runCharBeforeRun(self, cfg);
+
+    /* getchar and run */
     while (1) {
         char inputChar = __platform_getchar();
-        if (SHELL_STATE_EXIT == obj_runChar(self, inputChar)) {
+        if (SHELL_STATE_EXIT ==
+            _do_obj_runChar(self, inputChar, cfg, __lineHandler_fun)) {
             break;
         }
     }
 }
 
 static enum shell_state __obj_shellLineHandler_REPL(PikaObj* self,
-                                                    char* input_line) {
+                                                    char* input_line,
+                                                    struct shell_config* cfg) {
     /* exit */
     if (strEqu("exit()", input_line)) {
         /* exit pika shell */
@@ -984,23 +1125,23 @@ void args_setSysOut(Args* args, char* str) {
 }
 
 void method_returnBytes(Args* args, uint8_t* val) {
-    args_setBytes(args, "@rt", val, PIKA_BYTES_DEFAULT_SIZE);
+    args_pushArg_name(args, "@rt", arg_newBytes(val, PIKA_BYTES_DEFAULT_SIZE));
 }
 
 void method_returnStr(Args* args, char* val) {
-    args_setStr(args, "@rt", val);
+    args_pushArg_name(args, "@rt", arg_newStr(val));
 }
 
 void method_returnInt(Args* args, int64_t val) {
-    args_setInt(args, "@rt", val);
+    args_pushArg_name(args, "@rt", arg_newInt(val));
 }
 
 void method_returnFloat(Args* args, pika_float val) {
-    args_setFloat(args, "@rt", val);
+    args_pushArg_name(args, "@rt", arg_newFloat(val));
 }
 
 void method_returnPtr(Args* args, void* val) {
-    args_setPtr(args, "@rt", val);
+    args_pushArg_name(args, "@rt", arg_newPtr(ARG_TYPE_POINTER, val));
 }
 
 void method_returnObj(Args* args, void* val) {
@@ -1014,12 +1155,11 @@ void method_returnObj(Args* args, void* val) {
     } else {
         type = ARG_TYPE_OBJECT_NEW;
     }
-    args_setPtrWithType(args, "@rt", type, val);
+    args_pushArg_name(args, "@rt", arg_newPtr(type, val));
 }
 
 void method_returnArg(Args* args, Arg* arg) {
-    arg = arg_setName(arg, "@rt");
-    args_setArg(args, arg);
+    args_pushArg_name(args, "@rt", arg);
 }
 
 int64_t method_getInt(Args* args, char* argName) {
@@ -1057,7 +1197,7 @@ Arg* arg_setRef(Arg* self, char* name, PikaObj* obj) {
 int32_t obj_newDirectObj(PikaObj* self, char* objName, NewFun newFunPtr) {
     Arg* new_obj = arg_newDirectObj(newFunPtr);
     new_obj = arg_setName(new_obj, objName);
-    new_obj = arg_setType(new_obj, ARG_TYPE_OBJECT);
+    arg_setType(new_obj, ARG_TYPE_OBJECT);
     args_setArg(self->list, new_obj);
     return 0;
 }
@@ -1083,7 +1223,8 @@ PikaObj* obj_importModuleWithByteCode(PikaObj* self,
     PikaObj* New_PikaStdLib_SysObj(Args * args);
     if (!obj_isArgExist((PikaObj*)__pikaMain, name)) {
         obj_newDirectObj((PikaObj*)__pikaMain, name, New_PikaStdLib_SysObj);
-        pikaVM_runByteCode(obj_getObj((PikaObj*)__pikaMain, name), (uint8_t*)byteCode);
+        pikaVM_runByteCode(obj_getObj((PikaObj*)__pikaMain, name),
+                           (uint8_t*)byteCode);
     }
     if (self != (PikaObj*)__pikaMain) {
         Arg* module_arg = obj_getArg((PikaObj*)__pikaMain, name);
@@ -1151,7 +1292,8 @@ int obj_runModule(PikaObj* self, char* module_name) {
 
 int obj_importModule(PikaObj* self, char* module_name) {
     /* import bytecode of the module */
-    uint8_t* bytecode = obj_getByteCodeFromModule((PikaObj*)__pikaMain, module_name);
+    uint8_t* bytecode =
+        obj_getByteCodeFromModule((PikaObj*)__pikaMain, module_name);
     if (NULL == bytecode) {
         return 1;
     }
@@ -1278,3 +1420,21 @@ void* obj_getStruct(PikaObj* self, char* name) {
 char* obj_cacheStr(PikaObj* self, char* str) {
     return args_cacheStr(self->list, str);
 }
+
+void _obj_updateProxyFlag(PikaObj* self) {
+    if (!obj_getFlag(self, OBJ_FLAG_PROXY_GETATTRIBUTE)) {
+        if (NULL != _obj_getProp(self, "__getattribute__")) {
+            obj_setFlag(self, OBJ_FLAG_PROXY_GETATTRIBUTE);
+        }
+    }
+    if (!obj_getFlag(self, OBJ_FLAG_PROXY_GETATTR)) {
+        if (NULL != _obj_getProp(self, "__getattr__")) {
+            obj_setFlag(self, OBJ_FLAG_PROXY_GETATTR);
+        }
+    }
+    if (!obj_getFlag(self, OBJ_FLAG_PROXY_SETATTR)) {
+        if (NULL != _obj_getProp(self, "__setattr__")) {
+            obj_setFlag(self, OBJ_FLAG_PROXY_SETATTR);
+        }
+    }
+};

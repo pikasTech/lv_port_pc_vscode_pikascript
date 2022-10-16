@@ -180,26 +180,29 @@ Arg* PikaStdLib_SysObj_range(PikaObj* self, PikaTuple* ax) {
     /* set template arg to create rangeObj */
     Arg* obj_arg = arg_newDirectObj(New_PikaStdLib_RangeObj);
     PikaObj* range_obj = arg_getPtr(obj_arg);
+    RangeData range_data = {0};
     if (tuple_getSize(ax) == 1) {
         int start = 0;
         int end = arg_getInt(tuple_getArg(ax, 0));
-        obj_setInt(range_obj, "_start", start);
-        obj_setInt(range_obj, "_end", end);
-        obj_setInt(range_obj, "_step", 1);
+        range_data.start = start;
+        range_data.end = end;
+        range_data.step = 1;
     } else if (tuple_getSize(ax) == 2) {
         int start = arg_getInt(tuple_getArg(ax, 0));
         int end = arg_getInt(tuple_getArg(ax, 1));
-        obj_setInt(range_obj, "_start", start);
-        obj_setInt(range_obj, "_end", end);
-        obj_setInt(range_obj, "_step", 1);
+        range_data.start = start;
+        range_data.end = end;
+        range_data.step = 1;
     } else if (tuple_getSize(ax) == 3) {
         int start = arg_getInt(tuple_getArg(ax, 0));
         int end = arg_getInt(tuple_getArg(ax, 1));
         int step = arg_getInt(tuple_getArg(ax, 2));
-        obj_setInt(range_obj, "_start", start);
-        obj_setInt(range_obj, "_end", end);
-        obj_setInt(range_obj, "_step", step);
+        range_data.start = start;
+        range_data.end = end;
+        range_data.step = step;
     }
+    range_data.i = range_data.start;
+    obj_setStruct(range_obj, "_", range_data);
     return obj_arg;
 }
 
@@ -566,7 +569,7 @@ Arg* PikaStdLib_SysObj_getattr(PikaObj* self, PikaObj* obj, char* name) {
     Arg* arg = obj_getArg(obj, name);
     if (NULL == arg) {
         arg = obj_getMethodArg(obj, name);
-        return arg;
+        return arg_copy(arg);
     }
     if (NULL != arg) {
         res = arg_copy(arg);
@@ -617,5 +620,23 @@ Arg* PikaStdLib_SysObj_eval(PikaObj* self, char* code) {
     Arg* res = arg_copy(obj_getArg(self, "@res"));
     strsDeinit(&buffs);
     obj_removeArg(self, "@res");
+    return res;
+}
+
+static enum shell_state __obj_shellLineHandler_input(PikaObj* self,
+                                                     char* input_line,
+                                                     struct shell_config* cfg) {
+    cfg->context = arg_newStr(input_line);
+    return SHELL_STATE_EXIT;
+}
+
+char* PikaStdLib_SysObj_input(PikaObj* self, PikaTuple* info) {
+    struct shell_config cfg = {.prefix = "", .context = NULL};
+    if (tuple_getSize(info) > 0) {
+        __platform_printf(tuple_getStr(info, 0));
+    }
+    _temp_obj_shellLineProcess(self, __obj_shellLineHandler_input, &cfg);
+    char* res = obj_cacheStr(self, arg_getStr(cfg.context));
+    arg_deinit(cfg.context);
     return res;
 }

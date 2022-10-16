@@ -66,12 +66,27 @@ struct ByteCodeFrame {
     InstructArray instruct_array;
 };
 
+typedef struct NativeProperty NativeProperty;
+struct NativeProperty {
+    const NativeProperty* super;
+    const Arg* methodGroup;
+    uint32_t methodGroupCount;
+};
+
 typedef struct PikaObj PikaObj;
 struct PikaObj {
     Args* list;
     uint8_t refcnt;
     void* constructor;
     uint8_t flag;
+};
+
+typedef struct RangeData RangeData;
+struct RangeData {
+    int64_t start;
+    int64_t end;
+    int64_t step;
+    int64_t i;
 };
 
 #define OBJ_FLAG_PROXY_GETATTRIBUTE 0x01
@@ -95,11 +110,20 @@ struct MethodInfo {
     char* name;
     char* dec;
     char* ptr;
-    char* pars;
+    char* typelist;
     PikaObj* def_context;
     ArgType type;
     ByteCodeFrame* bytecode_frame;
 };
+
+typedef struct MethodProp {
+    void* ptr;
+    ByteCodeFrame* bytecode_frame;
+    PikaObj* def_context;
+    char* declareation;
+    char* type_list;
+    char* name;
+} MethodProp;
 
 typedef PikaObj LibObj;
 typedef PikaObj PikaMaker;
@@ -147,7 +171,10 @@ PikaObj* obj_getHostObjWithIsTemp(PikaObj* self,
 int32_t obj_freeObj(PikaObj* self, char* subObjectName);
 
 /* method */
-int32_t class_defineMethod(PikaObj* self, char* declareation, Method methodPtr);
+int32_t class_defineMethod(PikaObj* self,
+                           char* name,
+                           char* typelist,
+                           Method methodPtr);
 
 int32_t class_defineObjectMethod(PikaObj* self,
                                  char* declareation,
@@ -162,7 +189,8 @@ int32_t class_defineStaticMethod(PikaObj* self,
                                  ByteCodeFrame* bytecode_frame);
 
 int32_t class_defineConstructor(PikaObj* self,
-                                char* declareation,
+                                char* name,
+                                char* typelist,
                                 Method methodPtr);
 
 int32_t class_defineRunTimeConstructor(PikaObj* self,
@@ -220,15 +248,23 @@ char* fast_itoa(char* buf, uint32_t val);
 /* shell */
 void pikaScriptShell(PikaObj* self);
 enum shell_state { SHELL_STATE_CONTINUE, SHELL_STATE_EXIT };
-typedef enum shell_state (*__obj_shellLineHandler_t)(PikaObj*, char*);
 
 struct shell_config {
     char* prefix;
+    void* context;
 };
+
+typedef enum shell_state (*__obj_shellLineHandler_t)(PikaObj*,
+                                                     char*,
+                                                     struct shell_config*);
 
 void obj_shellLineProcess(PikaObj* self,
                           __obj_shellLineHandler_t __lineHandler_fun,
                           struct shell_config* cfg);
+
+void _temp_obj_shellLineProcess(PikaObj* self,
+                                __obj_shellLineHandler_t __lineHandler_fun,
+                                struct shell_config* cfg);
 
 /*
     need implament :
@@ -331,5 +367,79 @@ char* __printBytes(PikaObj* self, Arg* arg);
 
 #define PIKASCRIPT_VERSION_REQUIRE_MINIMUN(majer, minor, micro) \
     (PIKASCRIPT_VERSION_NUM >= PIKASCRIPT_VERSION_TO_NUM(majer, minor, micro))
+
+/*
+const MethodProp floatMethod = {
+    .ptr = (void*)PikaStdLib_SysObj_floatMethod,
+    .bytecode_frame = NULL,
+    .def_context = NULL,
+    .declareation = "float(arg)",
+    .type_list = "arg",
+    .name = "float",
+};
+*/
+
+#define method_typedef(_method, _name, _typelist) \
+    const MethodProp _method##Prop = {            \
+        .ptr = (void*)_method##Method,            \
+        .bytecode_frame = NULL,                   \
+        .def_context = NULL,                      \
+        .declareation = NULL,                     \
+        .type_list = _typelist,                   \
+        .name = _name,                            \
+    };
+
+/* clang-format off */
+#if PIKA_ARG_CACHE_ENABLE
+#define _method_def(_method, _hash, _type)           \
+    {                                               \
+        ._ =                                        \
+            {                                       \
+                .buffer = (uint8_t*)&_method##Prop  \
+            },                                      \
+        .size = sizeof(MethodProp),                 \
+        .heap_size = 0,                             \
+        .type = _type,                              \
+        .flag = 0,                                  \
+        .name_hash = _hash                          \
+    }
+#else
+#define _method_def(_method, _hash, _type)          \
+    {                                               \
+        ._ =                                        \
+            {                                       \
+                .buffer = (uint8_t*)&_method##Prop  \
+            },                                      \
+        .size = sizeof(MethodProp),                 \
+        .type = _type,                              \
+        .flag = 0,                                  \
+        .name_hash = _hash                          \
+    }
+#endif
+/* clang-format on */
+
+#define method_def(_method, _hash) \
+    _method_def(_method, _hash, ARG_TYPE_METHOD_NATIVE)
+#define constructor_def(_method, _hash) \
+    _method_def(_method, _hash, ARG_TYPE_METHOD_NATIVE_CONSTRUCTOR)
+#define class_def(_class) const Arg _class##Collect[] =
+
+#define class_inhert(_class, _super)                              \
+    extern const NativeProperty _super##NativeProp;               \
+    const NativeProperty _class##NativeProp = {                   \
+        .super = &_super##NativeProp,                             \
+        .methodGroup = _class##Collect,                           \
+        .methodGroupCount =                                       \
+            sizeof(_class##Collect) / sizeof(_class##Collect[0]), \
+    }
+
+#define pika_class(_method) _method##NativeProp
+
+void _obj_updateProxyFlag(PikaObj* self);
+#define obj_setClass(_self, _method)                        \
+    obj_setPtr((_self), "@p", (void*)&pika_class(_method)); \
+    _obj_updateProxyFlag((_self))
+
+Arg* _obj_getProp(PikaObj* obj, char* name);
 
 #endif

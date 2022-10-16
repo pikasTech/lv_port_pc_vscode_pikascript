@@ -1,24 +1,33 @@
-import pika_lvgl as lv
 import evue_asset
 import PikaStdLib as std
+import pika_lvgl as lv
+from PikaStdLib import MemChecker
 
-try:
-    f = open('../logo.png', 'rb')
-    png_data = f.read(-1)
-except:
-    print("Could not find img_cogwheel_argb.png")
-    exit()
+mem = MemChecker()
+mem.now()
 
-img_cogwheel_argb = lv.img_dsc_t({
-    'data_size': len(png_data),
-    'data': png_data
-})
+def drag_event_handler(e):
 
-img1 = lv.img(lv.scr_act())
-img1.set_src(img_cogwheel_argb)
-img1.align(lv.ALIGN.TOP_LEFT, 20, 20)
-img1.set_size(200, 50)
+    obj = e.get_target()
 
-std.MemChecker.now()
+    indev = lv.indev_get_act()
+
+    vect = lv.point_t()
+    indev.get_vect(vect)
+    x = obj.get_x() + vect.x
+    y = obj.get_y() + vect.y
+    obj.set_pos(x, y)
+    mem.now()
 
 
+#
+# Make an object dragable.
+#
+
+obj = lv.obj(lv.scr_act())
+obj.set_size(150, 100)
+obj.add_event_cb(drag_event_handler, lv.EVENT.PRESSING, None)
+
+label = lv.label(obj)
+label.set_text("Drag me")
+label.center()
