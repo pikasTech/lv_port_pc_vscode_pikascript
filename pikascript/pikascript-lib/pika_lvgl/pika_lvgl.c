@@ -208,7 +208,7 @@ void pika_lvgl_obj___init__(PikaObj* self, PikaTuple* parent) {
     PikaObj* parent_obj = NULL;
     if (NULL == parent) {
         void pika_lvgl_flag_tMethod(PikaObj * self, Args * args);
-        class_defineConstructor(self, "FLAG()", pika_lvgl_flag_tMethod);
+        class_defineConstructor(self, "FLAG", "", pika_lvgl_flag_tMethod);
         return;
     }
     if (tuple_getSize(parent) == 1) {
